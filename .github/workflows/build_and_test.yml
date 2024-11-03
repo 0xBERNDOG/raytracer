@@ -13,11 +13,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: configure
-      run: mkdir build && cd build
     - name: cmake
-      run: cmake ..
+      run: cmake -S . -B build
     - name: Build release
-      run: make release
+      run: cd build && make release
     - name: Build and run unit tests
-      run: make test
+      run: cd build && make test
