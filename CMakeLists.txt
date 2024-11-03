@@ -8,11 +8,13 @@ set(EXEC_NAME_RELEASE "${PROJECT_NAME}")
 set(TARGET_UNIT_TESTS "${PROJECT_NAME}_tests")
 set(EXEC_NAME_UNIT_TESTS "${PROJECT_NAME}_tests")
 
+# common
 set(SRC_FILES
     
 )
 
 set(INCLUDE_DIRS
+    .
     src
     src/engine
     src/utils
@@ -25,10 +27,20 @@ target_compile_options(${TARGET_RELEASE} PRIVATE -g -Wall -Wextra -std=c99 -peda
 target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS})
 
 # unit tests
-add_executable(${TARGET_UNIT_TESTS} tests/main.c)
+set(SRC_FILES_TESTS
+    tests/engine/main.c
+    tests/engine/sphere.c
+)
+
+set(INCLUDE_DIRS_TESTS
+    tests
+    tests/engine
+)
+
+add_executable(${TARGET_UNIT_TESTS} ${SRC_FILES} ${SRC_FILES_TESTS} tests/main.c)
 set_target_properties(${TARGET_UNIT_TESTS} PROPERTIES OUTPUT_NAME ${EXEC_NAME_UNIT_TESTS})
 target_compile_options(${TARGET_UNIT_TESTS} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
-target_include_directories(${TARGET_UNIT_TESTS} PUBLIC tests ${INCLUDE_DIRS})
+target_include_directories(${TARGET_UNIT_TESTS} PUBLIC ${INCLUDE_DIRS} ${INCLUDE_DIRS_TESTS})
 add_custom_target(
     "test"
     COMMAND ${TARGET_UNIT_TESTS}

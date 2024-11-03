@@ -1,7 +1,12 @@
 #include <stdio.h>
+
+#include "object.h"
 #include "sensor.h"
 
 int main() {
+    // todo: populate the world
+    struct object world[10];
+
     struct sensor_params params = {
         .position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
 

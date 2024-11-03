@@ -3,7 +3,7 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/src/**"
+                "${workspaceFolder}/**"
             ],
             "cStandard": "c99"
         }

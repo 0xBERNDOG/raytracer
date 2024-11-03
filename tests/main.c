@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "minunit.h"
 
+#include "tests/engine/main.h"
+
 int tests_run = 0;
 
 static char *test_example() {
@@ -9,13 +11,14 @@ static char *test_example() {
     return 0;
 }
 
-static char *all_tests() {
+static char *tests_all() {
     mu_run_test(test_example);
+    mu_run_test_group(test_engine_all);
     return 0;
 }
 
 int main() {
-    char *result = all_tests();
+    char *result = tests_all();
 
     if (result != 0) {
         printf("%s\n", result);
