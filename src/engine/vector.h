@@ -1,20 +1,25 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#include <stdbool.h>
 #include "optional.h"
 
-struct vector {
+typedef struct {
     float x;
     float y;
     float z;
-};
+} vector;
 
-typedef optional_type(struct vector) optional_vector;
+typedef optional_type(vector) optional_vector;
 
-float vector_dot(struct vector v1, struct vector v2);
+float vector_dot(vector v1, vector v2);
+float vector_len(vector v);
 
-struct vector vector_add(struct vector v1, struct vector v2);
-struct vector vector_subtract(struct vector v1, struct vector v2);
-struct vector vector_multiply(struct vector v1, float scalar);
+vector vector_add(vector v1, vector v2);
+vector vector_subtract(vector v1, vector v2);
+vector vector_multiply(vector v1, float scalar);
+vector vector_normalise(vector v);
+
+bool vector_equals(vector v1, vector v2);
 
 #endif

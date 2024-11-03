@@ -5,7 +5,7 @@
 #include "vector.h"
 
 struct sensor_params {
-    struct vector position;
+    vector position;
     struct angle orientation;  // (0,0,0) should be: "up" is +z, "forward" is +x
 
     // pixels

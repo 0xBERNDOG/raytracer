@@ -5,8 +5,8 @@
 #include "vector.h"
 
 struct plane {
-    struct vector position;
-    struct vector normal;
+    vector position;
+    vector normal;
 };
 
 optional_vector plane_ray_intersection(void* plane, struct ray* ray);

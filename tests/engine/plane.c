@@ -13,34 +13,91 @@ static char* test_plane_ray_intersection() {
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
 
-    mu_assert("no plane-ray intersection result", result.present);
+    mu_assert("no plane-ray intersection", result.present == true);
 
-    struct vector intersection = result.value;
+    vector intersection = result.value;
 
-    // todo: vector "nearly equal" function for floats
-    mu_assert("incorrect plane-ray intersection.x", intersection.x == 0.0f);
-    mu_assert("incorrect plane-ray intersection.y", intersection.y == 0.0f);
-    mu_assert("incorrect plane-ray intersection.z", intersection.z == 1.0f);
+    vector expected = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
+    mu_assert("plane-ray intersection not equal to expected",
+              vector_equals(intersection, expected));
+
+    return 0;
+}
+
+static char* test_plane_ray_intersection_angled() {
+    struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+                      .direction = {.x = 0.0f, .y = 1.0f, .z = 1.0f}};
+
+    struct plane plane = {.position = {.x = 0.0f, .y = 0.0f, .z = 1.0f},
+                          .normal = {.x = 1.0f, .y = 1.0f, .z = 1.0f}};
+
+    optional_vector result = plane_ray_intersection(&plane, &ray);
+
+    mu_assert("no plane-ray intersection", result.present == true);
 
     return 0;
 }
 
 static char* test_plane_ray_intersection_coincident() {
-    // todo
+    struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 1.0f},
+                      .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
+
+    struct plane plane = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+                          .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+
+    optional_vector result = plane_ray_intersection(&plane, &ray);
+
+    mu_assert("no plane-ray intersection", result.present == true);
+
+    vector intersection = result.value;
+    vector expected = ray.position;
+
+    mu_assert("plane-ray intersection not equal to expected",
+              vector_equals(intersection, expected));
+
+    return 0;
+}
+
+static char* test_plane_ray_intersection_coincident_same_position() {
+    struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+                      .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
+
+    struct plane plane = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+                          .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+
+    optional_vector result = plane_ray_intersection(&plane, &ray);
+
+    mu_assert("no plane-ray intersection", result.present == true);
+
+    vector intersection = result.value;
+    vector expected = ray.position;
+
+    mu_assert("plane-ray intersection not equal to expected",
+              vector_equals(intersection, expected));
+
     return 0;
 }
 
 static char* test_plane_ray_no_intersection() {
-    // todo
+    struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
+                      .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
+
+    struct plane plane = {.position = {.x = 1.0f, .y = 0.0f, .z = 0.0f},
+                          .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+
+    optional_vector result = plane_ray_intersection(&plane, &ray);
+
+    mu_assert("plane-ray intersection", result.present == false);
+
     return 0;
 }
 
 char* test_plane_all() {
     // run all plane tests
     mu_run_test(test_plane_ray_intersection);
+    mu_run_test(test_plane_ray_intersection_angled);
     mu_run_test(test_plane_ray_intersection_coincident);
+    mu_run_test(test_plane_ray_intersection_coincident_same_position);
     mu_run_test(test_plane_ray_no_intersection);
     return 0;
 }
-
-// todo: test plane-ray intersection
