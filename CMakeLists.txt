@@ -10,7 +10,8 @@ set(EXEC_NAME_UNIT_TESTS "${PROJECT_NAME}_tests")
 
 # common
 set(SRC_FILES
-    
+    src/engine/plane.c
+    src/engine/vector.c
 )
 
 set(INCLUDE_DIRS
@@ -29,7 +30,9 @@ target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS})
 # unit tests
 set(SRC_FILES_TESTS
     tests/engine/main.c
+    tests/engine/plane.c
     tests/engine/sphere.c
+    tests/engine/vector.c
 )
 
 set(INCLUDE_DIRS_TESTS
@@ -39,7 +42,7 @@ set(INCLUDE_DIRS_TESTS
 
 add_executable(${TARGET_UNIT_TESTS} ${SRC_FILES} ${SRC_FILES_TESTS} tests/main.c)
 set_target_properties(${TARGET_UNIT_TESTS} PROPERTIES OUTPUT_NAME ${EXEC_NAME_UNIT_TESTS})
-target_compile_options(${TARGET_UNIT_TESTS} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
+target_compile_options(${TARGET_UNIT_TESTS} PRIVATE -g3 -Wall -Wextra -std=c99 -pedantic-errors -O0)
 target_include_directories(${TARGET_UNIT_TESTS} PUBLIC ${INCLUDE_DIRS} ${INCLUDE_DIRS_TESTS})
 add_custom_target(
     "test"

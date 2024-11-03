@@ -4,5 +4,5 @@
         "tree.indentGuidesStroke": "#00ff00"
     },
     "workbench.tree.indent": 18,
-    "workbench.tree.renderIndentGuides": "always"
+    "workbench.tree.renderIndentGuides": "always",
 }
