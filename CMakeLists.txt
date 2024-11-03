@@ -3,7 +3,7 @@ project(raytracer VERSION 0.1 LANGUAGES C)
 
 set(PROJECT_NAME raytracer)
 set(TARGET_RELEASE "release")
-set(EXEC_NAME_RELEASE, "${PROJECT_NAME}")
+set(EXEC_NAME_RELEASE "${PROJECT_NAME}")
 
 set(TARGET_UNIT_TESTS "${PROJECT_NAME}_tests")
 set(EXEC_NAME_UNIT_TESTS "${PROJECT_NAME}_tests")
@@ -20,13 +20,13 @@ set(INCLUDE_DIRS
 
 # release
 add_executable(${TARGET_RELEASE} ${SRC_FILES} src/main.c)
-set_target_properties(${TARGET_RELEASE} PROPERTIES OUTPUT_NAME "${EXEC_NAME_RELEASE}")
+set_target_properties(${TARGET_RELEASE} PROPERTIES OUTPUT_NAME ${EXEC_NAME_RELEASE})
 target_compile_options(${TARGET_RELEASE} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
 target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS})
 
 # unit tests
 add_executable(${TARGET_UNIT_TESTS} tests/main.c)
-set_target_properties(${TARGET_UNIT_TESTS} PROPERTIES OUTPUT_NAME "${EXEC_NAME_UNIT_TESTS}")
+set_target_properties(${TARGET_UNIT_TESTS} PROPERTIES OUTPUT_NAME ${EXEC_NAME_UNIT_TESTS})
 target_compile_options(${TARGET_UNIT_TESTS} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
 target_include_directories(${TARGET_UNIT_TESTS} PUBLIC tests ${INCLUDE_DIRS})
 add_custom_target(
