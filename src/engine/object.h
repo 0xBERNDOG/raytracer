@@ -5,9 +5,12 @@
 #include "vector.h"
 
 struct object {
+    void *object;  // "this" (pointer to object data, e.g. struct sphere)
+
     optional_vector (*func_ray_intersection)(
-        struct ray *);  // function that takes a ray and returns point of
-                        // intersection (if there is one)
+        void *,
+        struct ray *);  // function that takes "this" and a ray and returns
+                        // point of intersection (if there is one)
 };
 
 #endif
