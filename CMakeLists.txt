@@ -29,6 +29,7 @@ set(LINK_LIBRARIES
 add_executable(${TARGET_RELEASE} ${SRC_FILES} src/main.c)
 set_target_properties(${TARGET_RELEASE} PROPERTIES OUTPUT_NAME ${EXEC_NAME_RELEASE})
 target_compile_options(${TARGET_RELEASE} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
+target_compile_definitions(${TARGET_RELEASE} PRIVATE NDEBUG)
 target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS})
 target_link_libraries(${TARGET_RELEASE} ${LINK_LIBRARIES})
 
