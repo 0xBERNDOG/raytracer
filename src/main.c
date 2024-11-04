@@ -2,6 +2,7 @@
 
 #include "object.h"
 #include "sensor.h"
+#include "version.h"
 
 int main() {
     // todo: populate the world

@@ -8,6 +8,9 @@ set(EXEC_NAME_RELEASE "${PROJECT_NAME}")
 set(TARGET_UNIT_TESTS "${PROJECT_NAME}_tests")
 set(EXEC_NAME_UNIT_TESTS "${PROJECT_NAME}_tests")
 
+# version
+configure_file(${CMAKE_SOURCE_DIR}/src/version.h ${CMAKE_SOURCE_DIR}/src/version.h)
+
 # common
 set(SRC_FILES
     src/engine/plane.c
