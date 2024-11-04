@@ -5,7 +5,7 @@
 #include "vector.h"
 
 struct sphere {
-    vector position;
+    struct vector position;
     float radius;
 };
 

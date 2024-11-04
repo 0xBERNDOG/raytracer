@@ -13,10 +13,10 @@ optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {
         return result;
     }
 
-    vector plane_norm = vector_normalise(plane->normal);
-    vector ray_dir = vector_normalise(ray->direction);
+    struct vector plane_norm = vector_normalise(plane->normal);
+    struct vector ray_dir = vector_normalise(ray->direction);
 
-    vector difference = vector_subtract(plane->position, ray->position);
+    struct vector difference = vector_subtract(plane->position, ray->position);
     float numerator = vector_dot(difference, plane_norm);
     float denominator = vector_dot(ray_dir, plane_norm);
 
@@ -36,8 +36,8 @@ optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {
     }
 
     float d = numerator / denominator;
-    vector ray_offset = vector_multiply(ray_dir, d);
-    vector intersection = vector_add(ray->position, ray_offset);
+    struct vector ray_offset = vector_multiply(ray_dir, d);
+    struct vector intersection = vector_add(ray->position, ray_offset);
 
     result.value = intersection;
     result.present = true;

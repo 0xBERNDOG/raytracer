@@ -15,9 +15,9 @@ static char* test_plane_ray_intersection() {
 
     mu_assert("no plane-ray intersection", result.present == true);
 
-    vector intersection = result.value;
+    struct vector intersection = result.value;
 
-    vector expected = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
+    struct vector expected = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
     mu_assert("plane-ray intersection not equal to expected",
               vector_equals(intersection, expected));
 
@@ -49,8 +49,8 @@ static char* test_plane_ray_intersection_coincident() {
 
     mu_assert("no plane-ray intersection", result.present == true);
 
-    vector intersection = result.value;
-    vector expected = ray.position;
+    struct vector intersection = result.value;
+    struct vector expected = ray.position;
 
     mu_assert("plane-ray intersection not equal to expected",
               vector_equals(intersection, expected));
@@ -69,8 +69,8 @@ static char* test_plane_ray_intersection_coincident_same_position() {
 
     mu_assert("no plane-ray intersection", result.present == true);
 
-    vector intersection = result.value;
-    vector expected = ray.position;
+    struct vector intersection = result.value;
+    struct vector expected = ray.position;
 
     mu_assert("plane-ray intersection not equal to expected",
               vector_equals(intersection, expected));
