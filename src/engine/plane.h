@@ -1,8 +1,8 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include "ray.h"
-#include "vector.h"
+#include "engine/ray.h"
+#include "engine/vector.h"
 
 struct plane {
     struct vector position;

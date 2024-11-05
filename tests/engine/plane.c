@@ -12,7 +12,6 @@ static char* test_plane_ray_intersection() {
                           .normal = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
-
     mu_assert("no plane-ray intersection", result.present == true);
 
     struct vector intersection = result.value;
@@ -32,7 +31,6 @@ static char* test_plane_ray_intersection_angled() {
                           .normal = {.x = 1.0f, .y = 1.0f, .z = 1.0f}};
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
-
     mu_assert("no plane-ray intersection", result.present == true);
 
     return 0;
@@ -46,7 +44,6 @@ static char* test_plane_ray_intersection_coincident() {
                           .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
-
     mu_assert("no plane-ray intersection", result.present == true);
 
     struct vector intersection = result.value;
@@ -66,7 +63,6 @@ static char* test_plane_ray_intersection_coincident_same_position() {
                           .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
-
     mu_assert("no plane-ray intersection", result.present == true);
 
     struct vector intersection = result.value;
@@ -86,7 +82,6 @@ static char* test_plane_ray_no_intersection() {
                           .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
 
     optional_vector result = plane_ray_intersection(&plane, &ray);
-
     mu_assert("plane-ray intersection", result.present == false);
 
     return 0;

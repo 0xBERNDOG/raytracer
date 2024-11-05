@@ -14,6 +14,7 @@ configure_file(${CMAKE_SOURCE_DIR}/src/version.h ${CMAKE_SOURCE_DIR}/src/version
 # common
 set(SRC_FILES
     src/engine/plane.c
+    src/engine/ray.c
     src/engine/vector.c
 )
 
@@ -40,6 +41,7 @@ target_link_libraries(${TARGET_RELEASE} ${LINK_LIBRARIES})
 set(SRC_FILES_TESTS
     tests/engine/main.c
     tests/engine/plane.c
+    tests/engine/ray.c
     tests/engine/sphere.c
     tests/engine/vector.c
 )

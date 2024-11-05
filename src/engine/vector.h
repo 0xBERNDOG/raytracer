@@ -2,7 +2,7 @@
 #define VECTOR_H
 
 #include <stdbool.h>
-#include "optional.h"
+#include "utils/optional.h"
 
 struct vector {
     float x;

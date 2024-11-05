@@ -1,8 +1,9 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "ray.h"
-#include "vector.h"
+#include "engine/vector.h"
+
+struct ray;
 
 struct sphere {
     struct vector position;

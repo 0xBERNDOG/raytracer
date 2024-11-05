@@ -1,8 +1,8 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "angle.h"
-#include "vector.h"
+#include "engine/angle.h"
+#include "engine/vector.h"
 
 struct sensor_params {
     struct vector position;

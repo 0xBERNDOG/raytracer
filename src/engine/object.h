@@ -1,8 +1,9 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "ray.h"
-#include "vector.h"
+#include "engine/vector.h"
+
+struct ray;
 
 struct object {
     void *object;  // "this" (pointer to object data, e.g. struct sphere)
