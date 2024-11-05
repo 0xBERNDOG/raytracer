@@ -8,14 +8,14 @@
 static char* test_nearest_intersection() {
     struct object world[2];
 
-    struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
-                      .direction = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+    struct ray ray = {.position = {.x = 0.0, .y = 0.0, .z = 0.0},
+                      .direction = {.x = 1.0, .y = 0.0, .z = 0.0}};
 
-    struct plane front_plane = {.position = {.x = 5.0f, .y = 0.0f, .z = 0.0f},
-                                .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+    struct plane front_plane = {.position = {.x = 5.0, .y = 0.0, .z = 0.0},
+                                .normal = {.x = 1.0, .y = 0.0, .z = 0.0}};
 
-    struct plane rear_plane = {.position = {.x = 10.0f, .y = 0.0f, .z = 0.0f},
-                               .normal = {.x = 1.0f, .y = 0.0f, .z = 0.0f}};
+    struct plane rear_plane = {.position = {.x = 10.0, .y = 0.0, .z = 0.0},
+                               .normal = {.x = 1.0, .y = 0.0, .z = 0.0}};
 
     struct object front_object = {
         .object = (void*)&front_plane,
@@ -33,7 +33,7 @@ static char* test_nearest_intersection() {
 
     struct vector intersection = result.value;
 
-    struct vector expected = {.x = 5.0f, .y = 0.0f, .z = 0.0f};
+    struct vector expected = {.x = 5.0, .y = 0.0, .z = 0.0};
     mu_assert("plane-ray intersection not equal to expected",
               vector_equals(intersection, expected));
 

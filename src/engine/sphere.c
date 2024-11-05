@@ -11,30 +11,30 @@ optional_vector sphere_ray_intersection(void* _sphere, struct ray* ray) {
     struct vector ray_dir = vector_normalise(ray->direction);
 
     struct vector diff = vector_subtract(ray->position, sphere->position);
-    float dot = vector_dot(ray_dir, diff);
-    float discriminant =
+    double dot = vector_dot(ray_dir, diff);
+    double discriminant =
         pow(dot, 2) - (pow(vector_len(diff), 2) - pow(sphere->radius, 2));
 
-    float tolerance = 0.0001f;
+    double tolerance = 0.0001;
     if (discriminant < -tolerance) {
         // no intersection
         return result;
     }
 
     if (fabs(discriminant) <= tolerance) {
-        discriminant = 0.0f;
+        discriminant = 0.0;
     }
 
-    float d1 = -dot + sqrt(discriminant);
-    float d2 = -dot - sqrt(discriminant);
-    float d;
+    double d1 = -dot + sqrt(discriminant);
+    double d2 = -dot - sqrt(discriminant);
+    double d;
 
-    if (discriminant == 0.0f) {
+    if (discriminant == 0.0) {
         // single intersection, both are equal
         d = d1;
     } else {
         // two solutions, take the smaller one in the +ve direction
-        if (d1 >= 0 && d2 >= 0) {
+        if (d1 >= 0.0 && d2 >= 0.0) {
             // take the smaller one
             if (d1 < d2) {
                 d = d1;

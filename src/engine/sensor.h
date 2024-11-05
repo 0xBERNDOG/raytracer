@@ -12,8 +12,8 @@ struct sensor_params {
     int width;
     int height;
 
-    float pixel_spacing;  // for now, pixels are single points (not squares)
-                          // with a defined spacing
+    double pixel_spacing;  // for now, pixels are single points (not squares)
+                           // with a defined spacing
 };
 
 #endif

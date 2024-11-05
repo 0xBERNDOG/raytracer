@@ -17,8 +17,8 @@ optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {
     struct vector ray_dir = vector_normalise(ray->direction);
 
     struct vector difference = vector_subtract(plane->position, ray->position);
-    float numerator = vector_dot(difference, plane_norm);
-    float denominator = vector_dot(ray_dir, plane_norm);
+    double numerator = vector_dot(difference, plane_norm);
+    double denominator = vector_dot(ray_dir, plane_norm);
 
     if (denominator == 0) {
         // plane and ray are parallel
@@ -35,7 +35,7 @@ optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {
         return result;
     }
 
-    float d = numerator / denominator;
+    double d = numerator / denominator;
     struct vector ray_offset = vector_multiply(ray_dir, d);
     struct vector intersection = vector_add(ray->position, ray_offset);
 

@@ -5,7 +5,7 @@ optional_vector ray_get_nearest_hit_position(struct ray* ray,
                                              struct object objects[],
                                              size_t num_objects) {
     optional_vector result = {.present = false};
-    float min_dist;
+    double min_dist;
 
     for (size_t i = 0; i < num_objects; i++) {
         struct object object = objects[i];
@@ -18,7 +18,7 @@ optional_vector ray_get_nearest_hit_position(struct ray* ray,
 
         // (p - r) . n
         // distance that hit position (p) is along ray direction (n)
-        float dist_to_hit_pos =
+        double dist_to_hit_pos =
             vector_dot(vector_subtract(hit_result.value, ray->position),
                        vector_normalise(ray->direction));
 
