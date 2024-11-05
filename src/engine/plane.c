@@ -1,8 +1,8 @@
 #include "engine/plane.h"
+#include "engine/ray.h"
 
 optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {
     // https://en.wikipedia.org/wiki/Line-plane_intersection
-
     optional_vector result = {.present = false};
     struct plane* plane = (struct plane*)_plane;
 

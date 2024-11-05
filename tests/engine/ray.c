@@ -1,6 +1,8 @@
 #include "minunit.h"
 
 #include "engine/plane.h"
+#include "engine/ray.h"
+#include "engine/object.h"
 #include "tests/engine/ray.h"
 
 static char* test_nearest_intersection() {

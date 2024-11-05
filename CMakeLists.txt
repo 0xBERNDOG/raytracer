@@ -15,6 +15,7 @@ configure_file(${CMAKE_SOURCE_DIR}/src/version.h ${CMAKE_SOURCE_DIR}/src/version
 set(SRC_FILES
     src/engine/plane.c
     src/engine/ray.c
+    src/engine/sphere.c
     src/engine/vector.c
 )
 

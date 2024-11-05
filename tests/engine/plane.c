@@ -4,7 +4,7 @@
 #include "engine/ray.h"
 #include "tests/engine/plane.h"
 
-static char* test_plane_ray_intersection() {
+static char* test_intersection() {
     struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
                       .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
 
@@ -23,7 +23,7 @@ static char* test_plane_ray_intersection() {
     return 0;
 }
 
-static char* test_plane_ray_intersection_angled() {
+static char* test_intersection_angled() {
     struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
                       .direction = {.x = 0.0f, .y = 1.0f, .z = 1.0f}};
 
@@ -36,7 +36,7 @@ static char* test_plane_ray_intersection_angled() {
     return 0;
 }
 
-static char* test_plane_ray_intersection_coincident() {
+static char* test_coincident() {
     struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 1.0f},
                       .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
 
@@ -55,7 +55,7 @@ static char* test_plane_ray_intersection_coincident() {
     return 0;
 }
 
-static char* test_plane_ray_intersection_coincident_same_position() {
+static char* test_coincident_same_position() {
     struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
                       .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
 
@@ -74,7 +74,7 @@ static char* test_plane_ray_intersection_coincident_same_position() {
     return 0;
 }
 
-static char* test_plane_ray_no_intersection() {
+static char* test_no_intersection() {
     struct ray ray = {.position = {.x = 0.0f, .y = 0.0f, .z = 0.0f},
                       .direction = {.x = 0.0f, .y = 0.0f, .z = 1.0f}};
 
@@ -89,10 +89,10 @@ static char* test_plane_ray_no_intersection() {
 
 char* test_plane_all() {
     // run all plane tests
-    mu_run_test(test_plane_ray_intersection);
-    mu_run_test(test_plane_ray_intersection_angled);
-    mu_run_test(test_plane_ray_intersection_coincident);
-    mu_run_test(test_plane_ray_intersection_coincident_same_position);
-    mu_run_test(test_plane_ray_no_intersection);
+    mu_run_test(test_intersection);
+    mu_run_test(test_intersection_angled);
+    mu_run_test(test_coincident);
+    mu_run_test(test_coincident_same_position);
+    mu_run_test(test_no_intersection);
     return 0;
 }
