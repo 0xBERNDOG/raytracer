@@ -1,8 +1,9 @@
-#include "engine/ray.h"
 #include "engine/sphere.h"
-#include "utils/compare.h"
 
 #include <math.h>
+
+#include "engine/ray.h"
+#include "utils/compare.h"
 
 optional_vector sphere_ray_intersection(void* _sphere, struct ray* ray) {
     // https://en.wikipedia.org/wiki/Line-sphere_intersection

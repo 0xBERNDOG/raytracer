@@ -1,7 +1,7 @@
-#include "minunit.h"
-
 #include "engine/plane.h"
+
 #include "engine/ray.h"
+#include "minunit.h"
 #include "tests/engine/plane.h"
 
 static char* test_intersection() {

@@ -1,7 +1,8 @@
-#include <stdio.h>
-#include "minunit.h"
-
 #include "tests/engine/main.h"
+
+#include <stdio.h>
+
+#include "minunit.h"
 
 int tests_run = 0;
 

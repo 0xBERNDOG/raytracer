@@ -1,10 +1,10 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <stddef.h>
+
 #include "engine/object.h"
 #include "engine/vector.h"
-
-#include <stddef.h>
 
 struct object;
 

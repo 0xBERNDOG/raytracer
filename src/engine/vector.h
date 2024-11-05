@@ -1,8 +1,9 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#include "utils/optional.h"
 #include <stdbool.h>
+
+#include "utils/optional.h"
 
 struct vector {
     double x;

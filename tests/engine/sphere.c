@@ -1,11 +1,11 @@
-#include "minunit.h"
-
-#include "engine/ray.h"
 #include "engine/sphere.h"
-#include "tests/engine/sphere.h"
-#include "utils/compare.h"
 
 #include <math.h>
+
+#include "engine/ray.h"
+#include "minunit.h"
+#include "tests/engine/sphere.h"
+#include "utils/compare.h"
 
 static char* test_intersection() {
     struct ray ray = {.position = {.x = 0.0, .y = 0.0, .z = 0.0},

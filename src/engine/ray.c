@@ -1,4 +1,5 @@
 #include "engine/ray.h"
+
 #include "engine/object.h"
 
 optional_vector ray_get_nearest_hit_position(struct ray* ray,

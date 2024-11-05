@@ -1,4 +1,5 @@
 #include "engine/plane.h"
+
 #include "engine/ray.h"
 
 optional_vector plane_ray_intersection(void* _plane, struct ray* ray) {

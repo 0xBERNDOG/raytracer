@@ -1,6 +1,6 @@
-#include "minunit.h"
-
 #include "tests/engine/main.h"
+
+#include "minunit.h"
 #include "tests/engine/plane.h"
 #include "tests/engine/ray.h"
 #include "tests/engine/sphere.h"

@@ -1,8 +1,8 @@
-#include "minunit.h"
+#include "engine/vector.h"
 
 #include <math.h>
 
-#include "engine/vector.h"
+#include "minunit.h"
 #include "tests/engine/vector.h"
 #include "utils/compare.h"
 

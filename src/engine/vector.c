@@ -1,8 +1,9 @@
 #include "engine/vector.h"
-#include "utils/compare.h"
 
 #include <assert.h>
 #include <math.h>
+
+#include "utils/compare.h"
 
 double vector_dot(struct vector v1, struct vector v2) {
     return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
