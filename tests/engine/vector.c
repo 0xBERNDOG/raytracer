@@ -4,9 +4,9 @@
 
 #include "engine/vector.h"
 #include "tests/engine/vector.h"
+#include "utils/compare.h"
 
 static char* test_equals() {
-    // todo: test nearby doubles
     struct vector v1 = {.x = 1.0, .y = 2.0, .z = 3.0};
     struct vector v2 = {.x = 1.0, .y = 2.0, .z = 3.0};
 
@@ -73,11 +73,8 @@ static char* test_normalise() {
     struct vector v = {.x = 3.0, .y = 4.0, .z = 5.0};
     struct vector result = vector_normalise(v);
 
-    // todo: fuzzy equals for doubles
-    double tolerance = 0.00001;
     double length = vector_len(result);
-    mu_assert("length not equal to 1.0",
-              (length > 1.0 - tolerance) && (length < 1.0 + tolerance));
+    mu_assert("length not equal to 1.0", FUZZY_EQUALS(length, 1.0));
 
     return 0;
 }

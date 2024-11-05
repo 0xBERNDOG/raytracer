@@ -3,6 +3,7 @@
 #include "engine/ray.h"
 #include "engine/sphere.h"
 #include "tests/engine/sphere.h"
+#include "utils/compare.h"
 
 #include <math.h>
 
@@ -38,10 +39,9 @@ static char* test_offset() {
     struct vector intersection = result.value;
     struct vector diff = vector_subtract(sphere.position, intersection);
     float expected = 1.0;
-    float tolerance = 0.0001;
 
     mu_assert("sphere-ray intersection distance not equal to expected",
-              fabs(vector_len(diff) - expected) < tolerance);
+              FUZZY_EQUALS(vector_len(diff), expected));
 
     return 0;
 }

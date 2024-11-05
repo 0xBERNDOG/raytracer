@@ -1,4 +1,6 @@
 #include "engine/vector.h"
+#include "utils/compare.h"
+
 #include <assert.h>
 #include <math.h>
 
@@ -24,10 +26,8 @@ struct vector vector_multiply(struct vector v1, double scalar) {
 
 bool vector_equals(struct vector v1, struct vector v2) {
     // fuzzy equals
-    double tolerance = 0.00001;
-    return ((fabs(v1.x - v2.x) <= tolerance) &&
-            (fabs(v1.y - v2.y) <= tolerance) &&
-            (fabs(v1.z - v2.z) <= tolerance));
+    return (FUZZY_EQUALS(v1.x, v2.x) && FUZZY_EQUALS(v1.y, v2.y) &&
+            FUZZY_EQUALS(v1.z, v2.z));
 }
 
 double vector_len(struct vector v) { return sqrt(vector_dot(v, v)); }

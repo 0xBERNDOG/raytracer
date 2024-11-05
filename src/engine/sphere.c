@@ -1,5 +1,6 @@
 #include "engine/ray.h"
 #include "engine/sphere.h"
+#include "utils/compare.h"
 
 #include <math.h>
 
@@ -15,13 +16,12 @@ optional_vector sphere_ray_intersection(void* _sphere, struct ray* ray) {
     double discriminant =
         pow(dot, 2) - (pow(vector_len(diff), 2) - pow(sphere->radius, 2));
 
-    double tolerance = 0.0001;
-    if (discriminant < -tolerance) {
+    if (discriminant < -FUZZY_EQUALS_TOLERANCE) {
         // no intersection
         return result;
     }
 
-    if (fabs(discriminant) <= tolerance) {
+    if (FUZZY_EQUALS(discriminant, 0.0)) {
         discriminant = 0.0;
     }
 
