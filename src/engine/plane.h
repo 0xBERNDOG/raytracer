@@ -6,10 +6,10 @@
 struct ray;
 
 struct plane {
-    struct vector position;
-    struct vector normal;
+	struct vector position;
+	struct vector normal;
 };
 
-optional_vector plane_ray_intersection(void* plane, struct ray* ray);
+optional_vector plane_ray_intersection(void *plane, struct ray *ray);
 
 #endif

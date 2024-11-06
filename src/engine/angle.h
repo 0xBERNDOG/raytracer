@@ -2,9 +2,9 @@
 #define ANGLE_H
 
 struct angle {
-    double p;
-    double y;
-    double r;
+	double p;
+	double y;
+	double r;
 };
 
 #endif

@@ -6,9 +6,9 @@
 #include "utils/optional.h"
 
 struct vector {
-    double x;
-    double y;
-    double z;
+	double x;
+	double y;
+	double z;
 };
 
 typedef optional_type(struct vector) optional_vector;
