@@ -1,12 +1,14 @@
 #include "engine/ray.h"
 
+#include <float.h>
+
 #include "engine/object.h"
 
 optional_vector ray_get_nearest_hit_position(struct ray* ray,
                                              struct object objects[],
                                              size_t num_objects) {
     optional_vector result = {.present = false};
-    double min_dist;
+    double min_dist = DBL_MAX;
 
     for (size_t i = 0; i < num_objects; i++) {
         struct object object = objects[i];
