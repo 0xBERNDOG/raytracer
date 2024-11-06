@@ -1,0 +1,3 @@
+[submodule "external/libbmp"]
+	path = external/libbmp
+	url = https://github.com/0xBERNDOG/libbmp

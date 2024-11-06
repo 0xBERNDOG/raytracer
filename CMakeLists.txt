@@ -31,11 +31,21 @@ set(LINK_LIBRARIES
 )
 
 # release
-add_executable(${TARGET_RELEASE} ${SRC_FILES} src/main.c)
+set(RELEASE_SRC_FILES
+    ${SRC_FILES}
+    external/libbmp/libbmp.c
+)
+
+set(RELEASE_INCLUDE_DIRS
+    ${INCLUDE_DIRS}
+    external
+)
+
+add_executable(${TARGET_RELEASE} ${RELEASE_SRC_FILES} src/main.c)
 set_target_properties(${TARGET_RELEASE} PROPERTIES OUTPUT_NAME ${EXEC_NAME_RELEASE})
 target_compile_options(${TARGET_RELEASE} PRIVATE -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
 target_compile_definitions(${TARGET_RELEASE} PRIVATE NDEBUG)
-target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS})
+target_include_directories(${TARGET_RELEASE} PUBLIC ${RELEASE_INCLUDE_DIRS})
 target_link_libraries(${TARGET_RELEASE} ${LINK_LIBRARIES})
 
 # unit tests
