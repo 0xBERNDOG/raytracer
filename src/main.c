@@ -4,6 +4,7 @@
 #include "engine/ray.h"
 #include "engine/sensor.h"
 #include "engine/sphere.h"
+#include "utils/file.h"
 #include "version.h"
 
 int
@@ -47,6 +48,9 @@ main()
 		}
 		printf("\n");
 	}
+
+	// todo: get filename from input to main()
+	file_write();
 
 	// todo:
 	// define scene
