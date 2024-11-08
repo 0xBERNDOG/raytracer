@@ -1,5 +1,7 @@
 #include "engine/plane.h"
 
+#include <assert.h>
+
 #include "engine/ray.h"
 
 optional_vector
@@ -47,4 +49,15 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 	result.present = true;
 
 	return result;
+}
+
+struct object
+create_plane(struct plane *plane)
+{
+	assert(plane != NULL);
+	struct object object = { .object = (void *)plane,
+		                 .func_ray_intersection =
+		                         &plane_ray_intersection };
+
+	return object;
 }

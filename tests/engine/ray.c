@@ -23,13 +23,8 @@ test_nearest_intersection()
 		.normal = { .x = 1.0, .y = 0.0, .z = 0.0 }
 	};
 
-	struct object front_object = { .object = (void *)&front_plane,
-		                       .func_ray_intersection =
-		                               &plane_ray_intersection };
-
-	struct object rear_object = { .object = (void *)&rear_plane,
-		                      .func_ray_intersection =
-		                              &plane_ray_intersection };
+	struct object front_object = create_plane(&front_plane);
+	struct object rear_object = create_plane(&rear_plane);
 
 	world[0] = front_object;
 	world[1] = rear_object;

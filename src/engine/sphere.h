@@ -10,6 +10,7 @@ struct sphere {
 	double radius;
 };
 
+struct object create_sphere(struct sphere *);
 optional_vector sphere_ray_intersection(void *sphere, struct ray *ray);
 
 #endif

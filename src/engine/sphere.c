@@ -1,5 +1,6 @@
 #include "engine/sphere.h"
 
+#include <assert.h>
 #include <math.h>
 
 #include "engine/ray.h"
@@ -61,4 +62,14 @@ sphere_ray_intersection(void *_sphere, struct ray *ray)
 	result.present = true;
 
 	return result;
+}
+
+struct object
+create_sphere(struct sphere *sphere)
+{
+	assert(sphere != NULL);
+	struct object object = { .object = (void *)sphere,
+		                 .func_ray_intersection =
+		                         &sphere_ray_intersection };
+	return object;
 }
