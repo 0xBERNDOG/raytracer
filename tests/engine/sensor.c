@@ -1,4 +1,5 @@
 #include "engine/sensor.h"
+#include "engine/image.h"
 
 #include "minunit.h"
 #include "tests/engine/sensor.h"
@@ -14,7 +15,7 @@ test_no_scene()
 		                        .height = 10,
 		                        .pixel_spacing = 1.0 };
 
-	struct vector *result = sensor_capture(params, NULL, 0);
+	struct image *result = sensor_capture(params, NULL, 0);
 	mu_assert("unexpected data returned by sensor", result == NULL);
 
 	return 0;
@@ -34,22 +35,24 @@ test_empty_scene()
 		.pixel_spacing = 1.0
 	};
 
-	struct vector expected[100];
+	struct image *expected = image_allocate(10, 10);
 	for (size_t i = 0; i < 100; i++) {
-		expected[i].x = 0.0;
-		expected[i].y = 0.0;
-		expected[i].z = 0.0;
+		expected->pixels[i].x = 0.0;
+		expected->pixels[i].y = 0.0;
+		expected->pixels[i].z = 0.0;
 	}
 
-	struct vector *result = sensor_capture(params, world, 0);
-	mu_assert("no data returned by sensor", result != NULL);
+	struct image *result = sensor_capture(params, world, 0);
+	mu_assert("no data returned by sensor",
+	          result != NULL && result->pixels != NULL);
 
 	for (size_t i = 0; i < 100; i++) {
-		mu_assert("sensor data doesn't match expected",
-		          vector_equals(expected[i], result[i]));
+		mu_assert(
+			"sensor data doesn't match expected",
+			vector_equals(expected->pixels[i], result->pixels[i]));
 	}
 
-	free(result);
+	image_free(result);
 
 	return 0;
 }
@@ -72,15 +75,16 @@ test_basic_scene()
 		               .position = { 10.0, 0.0, 0.0 } };
 	world[0] = create_plane(&plane);
 
-	struct vector *result = sensor_capture(params, world, 1);
-	mu_assert("no data returned by sensor", result != NULL);
+	struct image *result = sensor_capture(params, world, 1);
+	mu_assert("no data returned by sensor",
+	          result != NULL && result->pixels != NULL);
 
 	for (size_t i = 0; i < 100; i++) {
 		mu_assert("sensor data doesn't match expected",
-		          vector_len(result[i]) > 0.0);
+		          vector_len(result->pixels[i]) > 0.0);
 	}
 
-	free(result);
+	image_free(result);
 
 	return 0;
 }
@@ -103,22 +107,24 @@ test_no_hits()
 		               .position = { 0.0, 0.0, 20.0 } };
 	world[0] = create_plane(&plane);
 
-	struct vector expected[100];
+	struct image *expected = image_allocate(10, 10);
 	for (size_t i = 0; i < 100; i++) {
-		expected[i].x = 0.0;
-		expected[i].y = 0.0;
-		expected[i].z = 0.0;
+		expected->pixels[i].x = 0.0;
+		expected->pixels[i].y = 0.0;
+		expected->pixels[i].z = 0.0;
 	}
 
-	struct vector *result = sensor_capture(params, world, 0);
-	mu_assert("no data returned by sensor", result != NULL);
+	struct image *result = sensor_capture(params, world, 0);
+	mu_assert("no data returned by sensor",
+	          result != NULL && result->pixels != NULL);
 
 	for (size_t i = 0; i < 100; i++) {
-		mu_assert("sensor data doesn't match expected",
-		          vector_equals(expected[i], result[i]));
+		mu_assert(
+			"sensor data doesn't match expected",
+			vector_equals(expected->pixels[i], result->pixels[i]));
 	}
 
-	free(result);
+	image_free(result);
 
 	return 0;
 }

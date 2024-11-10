@@ -1,6 +1,7 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+#include "engine/image.h"
 #include "engine/object.h"
 #include "engine/plane.h"
 
@@ -17,7 +18,7 @@ struct sensor_params {
 	                         // squares) with a defined spacing
 };
 
-struct vector *sensor_capture(struct sensor_params, struct object objects[],
-                              size_t num_objects);
+struct image *sensor_capture(struct sensor_params, struct object objects[],
+                             size_t num_objects);
 
 #endif

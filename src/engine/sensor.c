@@ -1,10 +1,11 @@
 #include "engine/sensor.h"
+#include "engine/image.h"
 #include "engine/ray.h"
 
 #include <stddef.h>
 #include <stdlib.h>
 
-struct vector *
+struct image *
 sensor_capture(struct sensor_params params, struct object objects[],
                size_t num_objects)
 {
@@ -15,8 +16,7 @@ sensor_capture(struct sensor_params params, struct object objects[],
 	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
 		           .direction = params.plane.normal };
 
-	struct vector *pixels =
-		calloc(params.width * params.height, sizeof(struct vector));
+	struct image *image = image_allocate(params.width, params.height);
 
 	// transform the ray's basis vectors (x,y) onto the
 	// surface of the sensor's plane
@@ -61,12 +61,12 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			                                     num_objects);
 			if (hit_position.present) {
 				size_t i = x * params.width + y;
-				pixels[i].x = 255;
-				pixels[i].y = 255;
-				pixels[i].z = 255;
+				image->pixels[i].x = 255;
+				image->pixels[i].y = 255;
+				image->pixels[i].z = 255;
 			}
 		}
 	}
 
-	return pixels;
+	return image;
 }

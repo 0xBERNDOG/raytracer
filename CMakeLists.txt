@@ -13,6 +13,7 @@ configure_file("${CMAKE_SOURCE_DIR}/src/version.h" "${CMAKE_SOURCE_DIR}/src/vers
 
 # common
 set(SRC_FILES
+    "${CMAKE_SOURCE_DIR}/src/engine/image.c"
     "${CMAKE_SOURCE_DIR}/src/engine/plane.c"
     "${CMAKE_SOURCE_DIR}/src/engine/ray.c"
     "${CMAKE_SOURCE_DIR}/src/engine/sensor.c"

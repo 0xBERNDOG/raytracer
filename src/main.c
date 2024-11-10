@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "engine/image.h"
 #include "engine/object.h"
 #include "engine/ray.h"
 #include "engine/sensor.h"
@@ -25,29 +26,10 @@ main()
 
 	struct sphere sphere = { .position = { .x = 5.0, .y = 5.0, .z = 5.0 },
 		                 .radius = 1 };
-	struct object sphere_obj = { .object = (void *)&sphere,
-		                     .func_ray_intersection =
-		                             sphere_ray_intersection };
+	struct object sphere_obj = create_sphere(&sphere);
 	world[0] = sphere_obj;
 
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = { .x = 1.0, .y = 0.0, .z = 0.0 } };
-	for (int x = 0; x < 100; x++) {
-		for (int y = 0; y < 100; y++) {
-			ray.position.y = x / 10.0;
-			ray.position.z = y / 10.0;
-
-			optional_vector hit_pos =
-				ray_get_nearest_hit_position(&ray, world, 1);
-
-			if (hit_pos.present) {
-				printf(" X");
-			} else {
-				printf("  ");
-			}
-		}
-		printf("\n");
-	}
+	struct image *image = sensor_capture(params, world, 1);
 
 	// todo: get filename from input to main()
 	file_write();
