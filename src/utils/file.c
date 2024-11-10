@@ -1,23 +1,23 @@
 #include "utils/file.h"
+#include "engine/image.h"
+#include "engine/vector.h"
 #include "libbmp/libbmp.h"
+
 #include <stddef.h>
 
 int
-file_write()
+file_write(struct image *image)
 {
 	bmp_img img;
-	bmp_img_init_df(&img, 512, 512);    // todo: vary imagine size
+	bmp_img_init_df(&img, image->width, image->height);
 
-	// todo: sample code, replace with reading sensor data
-	for (size_t y = 0, x; y < 512; y++) {
-		for (x = 0; x < 512; x++) {
-			if ((y % 128 < 64 && x % 128 < 64) ||
-			    (y % 128 >= 64 && x % 128 >= 64)) {
-				bmp_pixel_init(&img.img_pixels[y][x], 250, 250,
-				               250);
-			} else {
-				bmp_pixel_init(&img.img_pixels[y][x], 0, 0, 0);
-			}
+	for (size_t x = 0; x < image->width; x++) {
+		for (size_t y = 0; y < image->height; y++) {
+			size_t i = x * image->width + y;
+			struct vector pixel = image->pixels[i];
+
+			bmp_pixel_init(&img.img_pixels[y][x], pixel.x, pixel.y,
+			               pixel.z);
 		}
 	}
 

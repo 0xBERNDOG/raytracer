@@ -20,6 +20,7 @@ sensor_capture(struct sensor_params params, struct object objects[],
 
 	// transform the ray's basis vectors (x,y) onto the
 	// surface of the sensor's plane
+	// todo: centre around plane's position
 	struct vector normal = { 0.0, 0.0, 1.0 };
 	struct vector rotation_axis = vector_cross(normal, params.plane.normal);
 

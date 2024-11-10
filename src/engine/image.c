@@ -18,6 +18,8 @@ image_allocate(size_t width, size_t height)
 	}
 
 	image->pixels = pixels;
+	image->width = width;
+	image->height = height;
 	return image;
 }
 

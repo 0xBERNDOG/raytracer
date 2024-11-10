@@ -19,9 +19,9 @@ main()
 	struct sensor_params params = {
 		.plane = { .position = { 0.0, 0.0, 0.0 },
 		           .normal = { 0.0, 0.0, 1.0 } },
-		.width = 10,
-		.height = 10,
-		.pixel_spacing = 1.0
+		.width = 200,
+		.height = 200,
+		.pixel_spacing = 0.05
 	};
 
 	struct sphere sphere = { .position = { .x = 5.0, .y = 5.0, .z = 5.0 },
@@ -32,7 +32,7 @@ main()
 	struct image *image = sensor_capture(params, world, 1);
 
 	// todo: get filename from input to main()
-	file_write();
+	file_write(image);
 
 	// todo:
 	// define scene
@@ -40,4 +40,5 @@ main()
 	// spawn + shoot rays
 
 	free(world);
+	image_free(image);
 }
