@@ -15,6 +15,7 @@ configure_file("${CMAKE_SOURCE_DIR}/src/version.h" "${CMAKE_SOURCE_DIR}/src/vers
 set(SRC_FILES
     "${CMAKE_SOURCE_DIR}/src/engine/plane.c"
     "${CMAKE_SOURCE_DIR}/src/engine/ray.c"
+    "${CMAKE_SOURCE_DIR}/src/engine/sensor.c"
     "${CMAKE_SOURCE_DIR}/src/engine/sphere.c"
     "${CMAKE_SOURCE_DIR}/src/engine/vector.c"
 )
@@ -52,6 +53,7 @@ set(SRC_FILES_TESTS
     "${CMAKE_SOURCE_DIR}/tests/engine/main.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/plane.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/ray.c"
+    "${CMAKE_SOURCE_DIR}/tests/engine/sensor.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/sphere.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/vector.c"
     "${CMAKE_SOURCE_DIR}/tests/main.c"

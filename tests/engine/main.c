@@ -3,6 +3,7 @@
 #include "minunit.h"
 #include "tests/engine/plane.h"
 #include "tests/engine/ray.h"
+#include "tests/engine/sensor.h"
 #include "tests/engine/sphere.h"
 #include "tests/engine/vector.h"
 
@@ -12,6 +13,7 @@ test_engine_all()
 	// run all engine tests
 	mu_run_test_group(test_plane_all);
 	mu_run_test_group(test_ray_all);
+	mu_run_test_group(test_sensor_all);
 	mu_run_test_group(test_sphere_all);
 	mu_run_test_group(test_vector_all);
 	return 0;

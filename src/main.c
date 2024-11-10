@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "engine/object.h"
 #include "engine/ray.h"
@@ -11,13 +12,12 @@ int
 main()
 {
 	// todo: populate the world
-	struct object world[10];
+	struct object *world = calloc(10, sizeof(struct object));
+	// todo: handle if calloc fails
 
 	struct sensor_params params = {
-		.position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-
-		.orientation = { .p = 0.0, .y = 0.0, .r = 0.0 },
-
+		.plane = { .position = { 0.0, 0.0, 0.0 },
+		           .normal = { 0.0, 0.0, 1.0 } },
 		.width = 10,
 		.height = 10,
 		.pixel_spacing = 1.0
@@ -56,4 +56,6 @@ main()
 	// define scene
 	//      objects, with refraction, lenses
 	// spawn + shoot rays
+
+	free(world);
 }
