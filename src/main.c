@@ -18,18 +18,22 @@ main()
 
 	struct sensor_params params = {
 		.plane = { .position = { 0.0, 0.0, 0.0 },
-		           .normal = { 0.0, 0.0, 1.0 } },
-		.width = 10,
-		.height = 10,
-		.pixel_spacing = 1.0
+		           .normal = { 1.0, 0.0, 0.0 } },
+		.width = 2000,
+		.height = 2000,
+		.pixel_spacing = 0.005
 	};
 
-	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 5.0 },
-		                 .radius = 1 };
+	struct sphere sphere = { .position = { 5.0, 0.5, 0.5 }, .radius = 1 };
 	struct object sphere_obj = create_sphere(&sphere);
 	world[0] = sphere_obj;
 
-	struct image *image = sensor_capture(params, world, 1);
+	struct sphere sphere2 = { .position = { 2.5, 0.0, -0.5 },
+		                  .radius = 0.5 };
+	struct object sphere_obj2 = create_sphere(&sphere2);
+	world[1] = sphere_obj2;
+
+	struct image *image = sensor_capture(params, world, 2);
 
 	// todo: get filename from input to main()
 	file_write(image);
