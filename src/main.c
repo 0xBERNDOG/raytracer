@@ -19,12 +19,12 @@ main()
 	struct sensor_params params = {
 		.plane = { .position = { 0.0, 0.0, 0.0 },
 		           .normal = { 0.0, 0.0, 1.0 } },
-		.width = 200,
-		.height = 200,
-		.pixel_spacing = 0.05
+		.width = 10,
+		.height = 10,
+		.pixel_spacing = 1.0
 	};
 
-	struct sphere sphere = { .position = { .x = 5.0, .y = 5.0, .z = 5.0 },
+	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 5.0 },
 		                 .radius = 1 };
 	struct object sphere_obj = create_sphere(&sphere);
 	world[0] = sphere_obj;
