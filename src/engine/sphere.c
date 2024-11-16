@@ -64,12 +64,33 @@ sphere_ray_intersection(void *_sphere, struct ray *ray)
 	return result;
 }
 
+optional_vector
+sphere_hit_normal(void *_sphere, struct vector *hit_position)
+{
+	optional_vector result = { .present = false };
+	struct sphere *sphere = (struct sphere *)_sphere;
+
+	struct vector relative_hit_position =
+		vector_subtract(*hit_position, sphere->position);
+
+	if (!FUZZY_EQUALS(vector_len(relative_hit_position), sphere->radius)) {
+		// too far away from centre to be a hit
+		return result;
+	}
+
+	result.value = vector_normalise(relative_hit_position);
+	result.present = true;
+
+	return result;
+}
+
 struct object
 create_sphere(struct sphere *sphere)
 {
 	assert(sphere != NULL);
 	struct object object = { .object = (void *)sphere,
 		                 .func_ray_intersection =
-		                         &sphere_ray_intersection };
+		                         &sphere_ray_intersection,
+		                 .func_hit_normal = &sphere_hit_normal };
 	return object;
 }

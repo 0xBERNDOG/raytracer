@@ -12,5 +12,6 @@ struct sphere {
 
 struct object create_sphere(struct sphere *);
 optional_vector sphere_ray_intersection(void *sphere, struct ray *ray);
+optional_vector sphere_hit_normal(void *sphere, struct vector *hit_position);
 
 #endif

@@ -107,6 +107,35 @@ test_no_intersection()
 	return 0;
 }
 
+static char *
+test_hit_normal()
+{
+	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		                 .radius = 1.0 };
+	struct vector hit_position = { -1.0, 0.0, 0.0 };
+	struct vector expected = { -1.0, 0.0, 0.0 };
+
+	optional_vector result = sphere_hit_normal(&sphere, &hit_position);
+	mu_assert("no sphere hit normal", result.present == true);
+	mu_assert("sphere hit normal not equal to expected",
+	          vector_equals(result.value, expected));
+
+	return 0;
+}
+
+static char *
+test_hit_normal_no_hit()
+{
+	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		                 .radius = 1.0 };
+	struct vector hit_position = { -2.0, 0.0, 0.0 };
+
+	optional_vector result = sphere_hit_normal(&sphere, &hit_position);
+	mu_assert("unexpected sphere hit normal", result.present == false);
+
+	return 0;
+}
+
 char *
 test_sphere_all()
 {
@@ -116,5 +145,7 @@ test_sphere_all()
 	mu_run_test(test_intersection_glancing);
 	mu_run_test(test_intersection_from_inside);
 	mu_run_test(test_no_intersection);
+	mu_run_test(test_hit_normal);
+	mu_run_test(test_hit_normal_no_hit);
 	return 0;
 }

@@ -97,6 +97,35 @@ test_no_intersection()
 	return 0;
 }
 
+static char *
+test_hit_normal()
+{
+	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		               .normal = { 0.0, 0.0, 1.0 } };
+	struct vector hit_position = { 1.0, 0.0, 0.0 };
+	struct vector expected = { 0.0, 0.0, 1.0 };
+
+	optional_vector result = plane_hit_normal(&plane, &hit_position);
+	mu_assert("no plane hit normal", result.present == true);
+	mu_assert("plane hit normal not equal to expected",
+	          vector_equals(result.value, expected));
+
+	return 0;
+}
+
+static char *
+test_hit_normal_no_hit()
+{
+	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		               .normal = { 0.0, 0.0, 1.0 } };
+	struct vector hit_position = { 1.0, 0.0, 1.0 };
+
+	optional_vector result = plane_hit_normal(&plane, &hit_position);
+	mu_assert("unexpected plane hit normal", result.present == false);
+
+	return 0;
+}
+
 char *
 test_plane_all()
 {
@@ -106,5 +135,7 @@ test_plane_all()
 	mu_run_test(test_coincident);
 	mu_run_test(test_coincident_same_position);
 	mu_run_test(test_no_intersection);
+	mu_run_test(test_hit_normal);
+	mu_run_test(test_hit_normal_no_hit);
 	return 0;
 }

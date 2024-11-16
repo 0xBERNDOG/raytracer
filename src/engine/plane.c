@@ -1,8 +1,10 @@
 #include "engine/plane.h"
 
 #include <assert.h>
+#include <math.h>
 
 #include "engine/ray.h"
+#include "utils/compare.h"
 
 optional_vector
 plane_ray_intersection(void *_plane, struct ray *ray)
@@ -51,13 +53,36 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 	return result;
 }
 
+optional_vector
+plane_hit_normal(void *_plane, struct vector *hit_position)
+{
+	optional_vector result = { .present = false };
+	struct plane *plane = (struct plane *)_plane;
+
+	struct vector relative_hit_position =
+		vector_subtract(*hit_position, plane->position);
+	double vertical_dist =
+		fabs(vector_dot(relative_hit_position, plane->normal));
+
+	if (!FUZZY_EQUALS(vertical_dist, 0.0)) {
+		// too far away from plane's surface to be a hit
+		return result;
+	}
+
+	result.value = plane->normal;
+	result.present = true;
+
+	return result;
+}
+
 struct object
 create_plane(struct plane *plane)
 {
 	assert(plane != NULL);
 	struct object object = { .object = (void *)plane,
 		                 .func_ray_intersection =
-		                         &plane_ray_intersection };
+		                         &plane_ray_intersection,
+		                 .func_hit_normal = &plane_hit_normal };
 
 	return object;
 }
