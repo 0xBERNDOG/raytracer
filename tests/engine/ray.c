@@ -6,7 +6,7 @@
 #include "tests/engine/ray.h"
 
 static char *
-test_nearest_intersection()
+test_intersection()
 {
 	struct object world[2];
 
@@ -29,10 +29,10 @@ test_nearest_intersection()
 	world[0] = front_object;
 	world[1] = rear_object;
 
-	optional_vector result = ray_get_nearest_hit_position(&ray, world, 2);
+	optional_hit_data result = ray_get_hit_data(&ray, world, 2);
 	mu_assert("no plane-ray intersection", result.present == true);
 
-	struct vector intersection = result.value;
+	struct vector intersection = result.value.position;
 
 	struct vector expected = { .x = 5.0, .y = 0.0, .z = 0.0 };
 	mu_assert("plane-ray intersection not equal to expected",
@@ -45,6 +45,6 @@ char *
 test_ray_all()
 {
 	// run all ray tests
-	mu_run_test(test_nearest_intersection);
+	mu_run_test(test_intersection);
 	return 0;
 }

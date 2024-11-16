@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 
+#include "engine/hit_data.h"
 #include "engine/object.h"
 #include "engine/vector.h"
 
@@ -13,10 +14,7 @@ struct ray {
 	struct vector direction;
 };
 
-// todo: consider a more rich struct hit_data
-// will store position, object, ray
-optional_vector ray_get_nearest_hit_position(struct ray *ray,
-                                             struct object objects[],
-                                             size_t num_objects);
+optional_hit_data ray_get_hit_data(struct ray *ray, struct object objects[],
+                                   size_t num_objects);
 
 #endif

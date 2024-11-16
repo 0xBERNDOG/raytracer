@@ -73,7 +73,9 @@ test_basic_scene()
 
 	struct plane plane = { .normal = { 1.0, 0.0, 0.0 },
 		               .position = { 10.0, 0.0, 0.0 } };
-	world[0] = create_plane(&plane);
+	struct object plane_obj = create_plane(&plane);
+	plane_obj.brightness = 1.0;    // todo: improve how this info is added
+	world[0] = plane_obj;
 
 	struct image *result = sensor_capture(params, world, 1);
 	mu_assert("no data returned by sensor",
@@ -105,7 +107,9 @@ test_no_hits()
 
 	struct plane plane = { .normal = { 0.0, 0.0, 1.0 },
 		               .position = { 0.0, 0.0, 20.0 } };
-	world[0] = create_plane(&plane);
+	struct object plane_obj = create_plane(&plane);
+	plane_obj.brightness = 1.0;    // todo: improve how this info is added
+	world[0] = plane_obj;
 
 	struct image *expected = image_allocate(10, 10);
 	for (size_t i = 0; i < 100; i++) {

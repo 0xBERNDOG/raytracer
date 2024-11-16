@@ -2,6 +2,7 @@
 #define HIT_DATA_H
 
 #include "engine/vector.h"
+#include "utils/optional.h"
 
 struct object;
 
@@ -14,7 +15,9 @@ struct hit_data {
 	// todo: surface params (reflectivity, transmissivity etc,
 	// roughness/angle spread around ray directions)
 
-	struct vector colour;
+	double brightness;    // starting with black+white only
 };
+
+typedef optional_type(struct hit_data) optional_hit_data;
 
 #endif

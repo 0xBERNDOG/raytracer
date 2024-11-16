@@ -1,4 +1,5 @@
 #include "engine/sensor.h"
+#include "engine/hit_data.h"
 #include "engine/image.h"
 #include "engine/ray.h"
 
@@ -60,15 +61,20 @@ sensor_capture(struct sensor_params params, struct object objects[],
 
 			// todo: update to use proper hit data
 			// (just gives a white pixel for a hit)
-			optional_vector hit_position =
-				ray_get_nearest_hit_position(&ray, objects,
-			                                     num_objects);
-			if (hit_position.present) {
-				size_t i = x * params.width + y;
-				image->pixels[i].x = 255;
-				image->pixels[i].y = 255;
-				image->pixels[i].z = 255;
+			optional_hit_data hit_data =
+				ray_get_hit_data(&ray, objects, num_objects);
+
+			if (!hit_data.present) {
+				continue;
 			}
+
+			struct hit_data data = hit_data.value;
+
+			double brightness = data.brightness;
+			size_t i = x * params.width + y;
+			image->pixels[i].x = 255 * brightness;
+			image->pixels[i].y = 255 * brightness;
+			image->pixels[i].z = 255 * brightness;
 		}
 	}
 

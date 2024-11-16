@@ -26,11 +26,16 @@ main()
 
 	struct sphere sphere = { .position = { 5.0, 0.5, 0.5 }, .radius = 1 };
 	struct object sphere_obj = create_sphere(&sphere);
+	// todo: improve how lighting data is passed to object?
+	sphere_obj.brightness = 0.5;
+	sphere_obj.reflectivity = 0.5;
 	world[0] = sphere_obj;
 
 	struct sphere sphere2 = { .position = { 2.5, 0.0, -0.5 },
 		                  .radius = 0.5 };
 	struct object sphere_obj2 = create_sphere(&sphere2);
+	sphere_obj2.brightness = 0.75;
+	sphere_obj2.reflectivity = 0.5;
 	world[1] = sphere_obj2;
 
 	struct image *image = sensor_capture(params, world, 2);
