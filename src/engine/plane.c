@@ -44,6 +44,12 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 	}
 
 	double d = numerator / denominator;
+
+	if (d < 0.0) {
+		// no solution in front of ray
+		return result;
+	}
+
 	struct vector ray_offset = vector_multiply(ray_dir, d);
 	struct vector intersection = vector_add(ray->position, ray_offset);
 
@@ -83,6 +89,9 @@ create_plane(struct plane *plane)
 		                 .func_ray_intersection =
 		                         &plane_ray_intersection,
 		                 .func_hit_normal = &plane_hit_normal };
+
+	// make sure plane's normal is normalised
+	plane->normal = vector_normalise(plane->normal);
 
 	return object;
 }

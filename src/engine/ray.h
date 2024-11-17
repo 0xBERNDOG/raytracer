@@ -15,6 +15,6 @@ struct ray {
 };
 
 optional_hit_data ray_get_hit_data(struct ray *ray, struct object objects[],
-                                   size_t num_objects);
+                                   size_t num_objects, struct object *last_hit);
 
 #endif

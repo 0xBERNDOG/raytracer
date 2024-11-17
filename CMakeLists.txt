@@ -44,7 +44,7 @@ message("${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS} ${RELEASE_INCLUDE_DIRS}")
 
 add_executable(${TARGET_RELEASE} ${SRC_FILES} ${RELEASE_SRC_FILES})
 set_target_properties(${TARGET_RELEASE} PROPERTIES OUTPUT_NAME ${EXEC_NAME_RELEASE})
-target_compile_options(${TARGET_RELEASE} PUBLIC -g -Wall -Wextra -std=c99 -pedantic-errors -Os)
+target_compile_options(${TARGET_RELEASE} PUBLIC -g -Wall -Wextra -std=c99 -pedantic-errors)
 target_compile_definitions(${TARGET_RELEASE} PUBLIC NDEBUG)
 target_include_directories(${TARGET_RELEASE} PUBLIC ${INCLUDE_DIRS} ${RELEASE_INCLUDE_DIRS})
 target_link_libraries(${TARGET_RELEASE} ${LINK_LIBRARIES})

@@ -29,7 +29,7 @@ test_intersection()
 	world[0] = front_object;
 	world[1] = rear_object;
 
-	optional_hit_data result = ray_get_hit_data(&ray, world, 2);
+	optional_hit_data result = ray_get_hit_data(&ray, world, 2, NULL);
 	mu_assert("no plane-ray intersection", result.present == true);
 
 	struct vector intersection = result.value.position;

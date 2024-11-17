@@ -21,6 +21,7 @@ struct vector vector_add(struct vector v1, struct vector v2);
 struct vector vector_subtract(struct vector v1, struct vector v2);
 struct vector vector_multiply(struct vector v1, double scalar);
 struct vector vector_normalise(struct vector v);
+struct vector vector_reflect(struct vector v, struct vector normal);
 
 bool vector_equals(struct vector v1, struct vector v2);
 

@@ -37,6 +37,11 @@ sphere_ray_intersection(void *_sphere, struct ray *ray)
 		// single intersection, both are equal
 		d = d1;
 	} else {
+		if (d1 < 0.0 && d2 < 0.0) {
+			// no solution in front of ray
+			return result;
+		}
+
 		// two solutions, take the smaller one in the +ve direction
 		if (d1 >= 0.0 && d2 >= 0.0) {
 			// take the smaller one

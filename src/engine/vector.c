@@ -68,3 +68,15 @@ vector_normalise(struct vector v)
 
 	return vector_multiply(v, 1.0 / length);
 }
+
+struct vector
+vector_reflect(struct vector v, struct vector _normal)
+{
+	// https://math.stackexchange.com/a/13263
+	struct vector normal = vector_normalise(_normal);
+	double dot = vector_dot(v, normal);
+
+	struct vector result =
+		vector_subtract(v, vector_multiply(normal, 2 * dot));
+	return result;
+}

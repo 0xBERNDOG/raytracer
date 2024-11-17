@@ -110,6 +110,34 @@ test_normalise()
 	return 0;
 }
 
+static char *
+test_reflect()
+{
+	struct vector v1 = { 1.0, 2.0, -3.0 };
+	struct vector normal = { 0.0, 0.0, 1.0 };
+
+	struct vector result = vector_reflect(v1, normal);
+	struct vector expected = { 1.0, 2.0, 3.0 };
+	mu_assert("vector not equal to expected",
+	          vector_equals(result, expected));
+
+	return 0;
+}
+
+static char *
+test_reflect_negative_norm()
+{
+	struct vector v1 = { 1.0, 2.0, -3.0 };
+	struct vector normal = { 0.0, 0.0, -1.0 };
+
+	struct vector result = vector_reflect(v1, normal);
+	struct vector expected = { 1.0, 2.0, 3.0 };
+	mu_assert("vector not equal to expected",
+	          vector_equals(result, expected));
+
+	return 0;
+}
+
 char *
 test_vector_all()
 {
@@ -122,5 +150,7 @@ test_vector_all()
 	mu_run_test(test_scalar_multiply);
 	mu_run_test(test_length);
 	mu_run_test(test_normalise);
+	mu_run_test(test_reflect);
+	mu_run_test(test_reflect_negative_norm);
 	return 0;
 }

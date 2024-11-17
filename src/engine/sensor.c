@@ -6,6 +6,38 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+static double
+shoot_rays(struct ray *ray, struct object objects[], size_t num_objects,
+           size_t depth, struct object *last_hit)
+{
+	if (depth == 0) {
+		return 0.0;
+	}
+
+	// todo: update to use proper hit data
+	// (just gives a white pixel for a hit)
+	optional_hit_data hit_data =
+		ray_get_hit_data(ray, objects, num_objects, last_hit);
+
+	if (!hit_data.present) {
+		return 0.0;
+	}
+
+	struct hit_data data = hit_data.value;
+
+	// update ray position to be reflected by the
+	// hit
+	ray->direction = vector_reflect(ray->direction, data.normal);
+	ray->position = data.position;
+
+	double reflected_brightness =
+		shoot_rays(ray, objects, num_objects, --depth, data.object) *
+		data.reflectivity;
+	double brightness = reflected_brightness + data.brightness;
+
+	return brightness;
+}
+
 struct image *
 sensor_capture(struct sensor_params params, struct object objects[],
                size_t num_objects)
@@ -58,23 +90,19 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			struct vector offset = vector_add(offset_x, offset_y);
 			ray.position =
 				vector_add(params.plane.position, offset);
+			ray.direction = params.plane.normal;
 
-			// todo: update to use proper hit data
-			// (just gives a white pixel for a hit)
-			optional_hit_data hit_data =
-				ray_get_hit_data(&ray, objects, num_objects);
+			double brightness =
+				shoot_rays(&ray, objects, num_objects, 3, NULL);
 
-			if (!hit_data.present) {
-				continue;
+			if (brightness > 1.0) {
+				brightness = 1.0;
 			}
 
-			struct hit_data data = hit_data.value;
-
-			double brightness = data.brightness;
 			size_t i = x * params.width + y;
-			image->pixels[i].x = 255 * brightness;
-			image->pixels[i].y = 255 * brightness;
-			image->pixels[i].z = 255 * brightness;
+			image->pixels[i].x = 255.0 * brightness;
+			image->pixels[i].y = 255.0 * brightness;
+			image->pixels[i].z = 255.0 * brightness;
 		}
 	}
 
