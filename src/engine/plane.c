@@ -7,24 +7,24 @@
 #include "utils/compare.h"
 
 optional_vector
-plane_ray_intersection(void *_plane, struct ray *ray)
+plane_ray_intersection(void *_plane, struct ray ray)
 {
 	// https://en.wikipedia.org/wiki/Line-plane_intersection
 	optional_vector result = { .present = false };
 	struct plane *plane = (struct plane *)_plane;
 
-	if (vector_equals(plane->position, ray->position)) {
-		result.value = ray->position;
+	if (vector_equals(plane->position, ray.position)) {
+		result.value = ray.position;
 		result.present = true;
 
 		return result;
 	}
 
 	struct vector plane_norm = vector_normalise(plane->normal);
-	struct vector ray_dir = vector_normalise(ray->direction);
+	struct vector ray_dir = vector_normalise(ray.direction);
 
 	struct vector difference =
-		vector_subtract(plane->position, ray->position);
+		vector_subtract(plane->position, ray.position);
 	double numerator = vector_dot(difference, plane_norm);
 	double denominator = vector_dot(ray_dir, plane_norm);
 
@@ -33,7 +33,7 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 
 		if (numerator == 0) {
 			// ray is inside the plane
-			result.value = ray->position;
+			result.value = ray.position;
 			result.present = true;
 
 			return result;
@@ -51,7 +51,7 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 	}
 
 	struct vector ray_offset = vector_multiply(ray_dir, d);
-	struct vector intersection = vector_add(ray->position, ray_offset);
+	struct vector intersection = vector_add(ray.position, ray_offset);
 
 	result.value = intersection;
 	result.present = true;
@@ -60,13 +60,13 @@ plane_ray_intersection(void *_plane, struct ray *ray)
 }
 
 optional_vector
-plane_hit_normal(void *_plane, struct vector *hit_position)
+plane_hit_normal(void *_plane, struct vector hit_position)
 {
 	optional_vector result = { .present = false };
 	struct plane *plane = (struct plane *)_plane;
 
 	struct vector relative_hit_position =
-		vector_subtract(*hit_position, plane->position);
+		vector_subtract(hit_position, plane->position);
 	double vertical_dist =
 		fabs(vector_dot(relative_hit_position, plane->normal));
 
@@ -81,6 +81,26 @@ plane_hit_normal(void *_plane, struct vector *hit_position)
 	return result;
 }
 
+bool
+plane_ray_entering(void *plane, struct ray ray)
+{
+	// planes are infinitely thin, so it doesn't make sense to be entering
+	// (or leaving) it
+	(void)plane;    // unused
+	(void)ray;      // unused
+	return false;
+}
+
+bool
+plane_ray_leaving(void *plane, struct ray ray)
+{
+	// planes are infinitely thin, so it doesn't make sense to be entering
+	// (or leaving) it
+	(void)plane;    // unused
+	(void)ray;      // unused
+	return false;
+}
+
 struct object
 create_plane(struct plane *plane)
 {
@@ -88,7 +108,9 @@ create_plane(struct plane *plane)
 	struct object object = { .object = (void *)plane,
 		                 .func_ray_intersection =
 		                         &plane_ray_intersection,
-		                 .func_hit_normal = &plane_hit_normal };
+		                 .func_hit_normal = &plane_hit_normal,
+		                 .func_ray_entering = &plane_ray_entering,
+		                 .func_ray_leaving = &plane_ray_leaving };
 
 	// make sure plane's normal is normalised
 	plane->normal = vector_normalise(plane->normal);

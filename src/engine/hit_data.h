@@ -16,7 +16,9 @@ struct hit_data {
 	// roughness/angle spread around ray directions)
 
 	double brightness;    // starting with black+white only
-	double reflectivity;
+	optional_double reflectivity;
+	optional_double transmissivity;
+	optional_double refractive_index;
 };
 
 typedef optional_type(struct hit_data) optional_hit_data;

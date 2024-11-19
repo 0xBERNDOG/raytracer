@@ -16,7 +16,7 @@ test_intersection()
 	struct sphere sphere = { .position = { .x = 5.0, .y = 0.0, .z = 0.0 },
 		                 .radius = 1.0 };
 
-	optional_vector result = sphere_ray_intersection(&sphere, &ray);
+	optional_vector result = sphere_ray_intersection(&sphere, ray);
 	mu_assert("no sphere-ray intersection", result.present == true);
 
 	struct vector intersection = result.value;
@@ -37,7 +37,7 @@ test_offset()
 	struct sphere sphere = { .position = { .x = 5.0, .y = 0.0, .z = 0.0 },
 		                 .radius = 1.0 };
 
-	optional_vector result = sphere_ray_intersection(&sphere, &ray);
+	optional_vector result = sphere_ray_intersection(&sphere, ray);
 	mu_assert("no sphere-ray intersection", result.present == true);
 
 	struct vector intersection = result.value;
@@ -59,7 +59,7 @@ test_intersection_glancing()
 	struct sphere sphere = { .position = { .x = 5.0, .y = 0.0, .z = 0.0 },
 		                 .radius = 1.0 };
 
-	optional_vector result = sphere_ray_intersection(&sphere, &ray);
+	optional_vector result = sphere_ray_intersection(&sphere, ray);
 	mu_assert("no sphere-ray intersection", result.present == true);
 
 	struct vector intersection = result.value;
@@ -80,7 +80,7 @@ test_intersection_from_inside()
 	struct sphere sphere = { .position = { .x = 5.0, .y = 0.0, .z = 0.0 },
 		                 .radius = 1.0 };
 
-	optional_vector result = sphere_ray_intersection(&sphere, &ray);
+	optional_vector result = sphere_ray_intersection(&sphere, ray);
 	mu_assert("no sphere-ray intersection", result.present == true);
 
 	struct vector intersection = result.value;
@@ -101,7 +101,7 @@ test_no_intersection()
 	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
 		                 .radius = 1.0 };
 
-	optional_vector result = sphere_ray_intersection(&sphere, &ray);
+	optional_vector result = sphere_ray_intersection(&sphere, ray);
 	mu_assert("sphere-ray intersection", result.present == false);
 
 	return 0;
@@ -115,7 +115,7 @@ test_hit_normal()
 	struct vector hit_position = { -1.0, 0.0, 0.0 };
 	struct vector expected = { -1.0, 0.0, 0.0 };
 
-	optional_vector result = sphere_hit_normal(&sphere, &hit_position);
+	optional_vector result = sphere_hit_normal(&sphere, hit_position);
 	mu_assert("no sphere hit normal", result.present == true);
 	mu_assert("sphere hit normal not equal to expected",
 	          vector_equals(result.value, expected));
@@ -130,8 +130,46 @@ test_hit_normal_no_hit()
 		                 .radius = 1.0 };
 	struct vector hit_position = { -2.0, 0.0, 0.0 };
 
-	optional_vector result = sphere_hit_normal(&sphere, &hit_position);
+	optional_vector result = sphere_hit_normal(&sphere, hit_position);
 	mu_assert("unexpected sphere hit normal", result.present == false);
+
+	return 0;
+}
+
+static char *
+test_ray_entering()
+{
+	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		                 .radius = 1.0 };
+	struct ray ray = { .position = { 2.0, 0.0, 0.0 },
+		           .direction = { -1.0, 0.0, 0.0 } };
+
+	bool result = sphere_ray_entering(&sphere, ray);
+	mu_assert("ray not entering sphere", result == true);
+
+	ray.position = (struct vector) { 2.0, 0.0, 0.0 };
+	ray.direction = (struct vector) { 1.0, 0.0, 0.0 };
+	result = sphere_ray_entering(&sphere, ray);
+	mu_assert("ray entering sphere", result == false);
+
+	return 0;
+}
+
+static char *
+test_ray_leaving()
+{
+	struct sphere sphere = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+		                 .radius = 1.0 };
+	struct ray ray = { .position = { 0.0, 0.0, 0.0 },
+		           .direction = { 1.0, 0.0, 0.0 } };
+
+	bool result = sphere_ray_leaving(&sphere, ray);
+	mu_assert("ray not leaving sphere", result == true);
+
+	ray.position = (struct vector) { 2.0, 0.0, 0.0 };
+	ray.direction = (struct vector) { 1.0, 0.0, 0.0 };
+	result = sphere_ray_leaving(&sphere, ray);
+	mu_assert("ray leaving sphere", result == false);
 
 	return 0;
 }
@@ -147,5 +185,7 @@ test_sphere_all()
 	mu_run_test(test_no_intersection);
 	mu_run_test(test_hit_normal);
 	mu_run_test(test_hit_normal_no_hit);
+	mu_run_test(test_ray_entering);
+	mu_run_test(test_ray_leaving);
 	return 0;
 }

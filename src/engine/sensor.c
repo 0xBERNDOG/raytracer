@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 static double
-shoot_rays(struct ray *ray, struct object objects[], size_t num_objects,
+shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
            size_t depth, struct object *last_hit)
 {
 	if (depth == 0) {
@@ -25,15 +25,75 @@ shoot_rays(struct ray *ray, struct object objects[], size_t num_objects,
 
 	struct hit_data data = hit_data.value;
 
-	// update ray position to be reflected by the
-	// hit
-	ray->direction = vector_reflect(ray->direction, data.normal);
-	ray->position = data.position;
+	double reflected_brightness = 0.0;
+	if (data.reflectivity.present) {
+		// update ray position to be reflected by the
+		// hit
+		struct ray reflected_ray = {
+			.direction = vector_reflect(ray.direction, data.normal),
+			.position = data.position
+		};
 
-	double reflected_brightness =
-		shoot_rays(ray, objects, num_objects, --depth, data.object) *
-		data.reflectivity;
-	double brightness = reflected_brightness + data.brightness;
+		reflected_brightness =
+			shoot_rays(reflected_ray, objects, num_objects,
+		                   depth - 1, data.object) *
+			data.reflectivity.value;
+	}
+
+	double transmitted_brightness = 0.0;
+	if (data.transmissivity.present) {
+		bool refraction = true;
+
+		// update ray position to be refracted by the
+		// hit
+		double n1 = 1.0;
+		double n2 = 1.0;
+
+		// todo: this doesnt work for objects that are touching, assumes
+		// we go in/out of air all the time
+
+		// check for entering/leaving from the midpoint between the shot
+		// ray and the hit position to prevent spurious detections
+		struct ray advanced_ray = ray;
+		advanced_ray.position = vector_multiply(
+			vector_add(data.position, ray.position), 0.5);
+
+		if (data.object->func_ray_entering(data.object->object,
+		                                   advanced_ray)) {
+			n1 = 1.0;
+			n2 = data.refractive_index.value;
+		} else if (data.object->func_ray_leaving(data.object->object,
+		                                         advanced_ray)) {
+			n1 = data.refractive_index.value;
+			n2 = 1.0;
+		} else {
+			// neither entering nor leaving the object, so no
+			// optical boundary
+			refraction = false;
+		}
+
+		optional_vector refracted_direction =
+			vector_refract(ray.direction, data.normal, n1, n2);
+
+		if (!refracted_direction.present) {
+			refraction = false;
+		}
+
+		if (refraction) {
+			struct ray refracted_ray = {
+				.direction = refracted_direction.value,
+				.position = data.position
+			};
+
+			transmitted_brightness =
+				shoot_rays(refracted_ray, objects, num_objects,
+			                   depth - 1, data.object) *
+				data.transmissivity.value;
+		}
+	}
+
+	double brightness =
+		reflected_brightness + transmitted_brightness + data.brightness;
 
 	return brightness;
 }
@@ -93,7 +153,7 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			ray.direction = params.plane.normal;
 
 			double brightness =
-				shoot_rays(&ray, objects, num_objects, 3, NULL);
+				shoot_rays(ray, objects, num_objects, 3, NULL);
 
 			if (brightness > 1.0) {
 				brightness = 1.0;

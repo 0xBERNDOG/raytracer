@@ -80,3 +80,29 @@ vector_reflect(struct vector v, struct vector _normal)
 		vector_subtract(v, vector_multiply(normal, 2 * dot));
 	return result;
 }
+
+optional_vector
+vector_refract(struct vector v, struct vector _normal, double n1, double n2)
+{
+	// https://stackoverflow.com/a/58676386
+	optional_vector result = { .present = false };
+
+	struct vector normal = vector_normalise(_normal);
+	double n = n1 / n2;
+
+	double cosI = -vector_dot(normal, v);
+	double sinT2 = pow(n, 2) * (1.0 - pow(cosI, 2));
+
+	if (sinT2 > 1.0) {
+		// total internal reflection
+		return result;
+	}
+
+	double cosT = sqrt(1.0 - sinT2);
+
+	result.value = vector_add(vector_multiply(v, n),
+	                          vector_multiply(normal, (n * cosI) - cosT));
+	result.present = true;
+
+	return result;
+}

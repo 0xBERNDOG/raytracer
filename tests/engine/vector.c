@@ -138,6 +138,45 @@ test_reflect_negative_norm()
 	return 0;
 }
 
+static char *
+test_refraction()
+{
+	struct vector v1 = { -1.0, -1.0, 0.0 };
+	struct vector normal = { 1.0, 0.0, 0.0 };
+
+	v1 = vector_normalise(v1);
+
+	optional_vector result = vector_refract(v1, normal, 1.0, 1.1);
+	mu_assert("no refraction result", result.present == true);
+
+	result.value = vector_normalise(result.value);
+
+	double v1_dot_normal = vector_dot(v1, normal);
+	double result_dot_normal = vector_dot(result.value, normal);
+
+	// refracted ray should be projected more along normal than incident
+	// (i.e. turned towards it)
+	mu_assert("ray refracted in wrong direction",
+	          fabs(result_dot_normal) > fabs(v1_dot_normal));
+
+	return 0;
+}
+
+static char *
+test_total_internal_reflection()
+{
+	// with n1 = 2*n2, critical angle should be 30 degrees
+	struct vector v1 = { 0.5, 0.5, 0.0 };
+	struct vector normal = { 1.0, 0.0, 0.0 };
+
+	v1 = vector_normalise(v1);
+
+	optional_vector result = vector_refract(v1, normal, 2.0, 1.0);
+	mu_assert("unexpected refraction result", result.present == false);
+
+	return 0;
+}
+
 char *
 test_vector_all()
 {
@@ -152,5 +191,7 @@ test_vector_all()
 	mu_run_test(test_normalise);
 	mu_run_test(test_reflect);
 	mu_run_test(test_reflect_negative_norm);
+	mu_run_test(test_refraction);
+	mu_run_test(test_total_internal_reflection);
 	return 0;
 }

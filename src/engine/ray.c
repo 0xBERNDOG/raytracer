@@ -4,9 +4,10 @@
 #include <float.h>
 
 #include "engine/object.h"
+#include "utils/compare.h"
 
 optional_hit_data
-ray_get_hit_data(struct ray *ray, struct object objects[], size_t num_objects,
+ray_get_hit_data(struct ray ray, struct object objects[], size_t num_objects,
                  struct object *last_hit)
 {
 	optional_hit_data result = { .present = false };
@@ -27,12 +28,13 @@ ray_get_hit_data(struct ray *ray, struct object objects[], size_t num_objects,
 		// (p - r) . n
 		// distance that hit position (p) is along ray direction (n)
 		double dist_to_hit_pos = vector_dot(
-			vector_subtract(hit_position.value, ray->position),
-			vector_normalise(ray->direction));
+			vector_subtract(hit_position.value, ray.position),
+			vector_normalise(ray.direction));
 
 		// extra distance required for last_hit object to avoid
 		// self-intersection
-		if (object == last_hit && dist_to_hit_pos < 0.1) {
+		if (object == last_hit &&
+		    dist_to_hit_pos < FUZZY_EQUALS_TOLERANCE) {
 			continue;
 		}
 
@@ -41,6 +43,8 @@ ray_get_hit_data(struct ray *ray, struct object objects[], size_t num_objects,
 			hit_data.position = hit_position.value;
 			hit_data.brightness = object->brightness;
 			hit_data.reflectivity = object->reflectivity;
+			hit_data.transmissivity = object->transmissivity;
+			hit_data.refractive_index = object->refractive_index;
 
 			min_dist = dist_to_hit_pos;
 			result.present = true;
@@ -51,7 +55,7 @@ ray_get_hit_data(struct ray *ray, struct object objects[], size_t num_objects,
 	if (result.present) {
 		struct object *object = hit_data.object;
 		optional_vector hit_normal = object->func_hit_normal(
-			object->object, &hit_data.position);
+			object->object, hit_data.position);
 		assert(hit_normal.present);
 		hit_data.normal = hit_normal.value;
 
