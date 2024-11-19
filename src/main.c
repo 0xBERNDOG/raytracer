@@ -39,11 +39,17 @@ main()
 	struct object sphere_obj2 = create_sphere(&sphere2);
 	sphere_obj2.brightness = 0.0;
 	// sphere_obj2.reflectivity = CREATE_OPTIONAL(double, 0.4);
-	sphere_obj2.refractive_index = CREATE_OPTIONAL(double, 1.2);
+	sphere_obj2.refractive_index = CREATE_OPTIONAL(double, 1.1);
 	sphere_obj2.transmissivity = CREATE_OPTIONAL(double, 0.4);
 	world[1] = sphere_obj2;
 
-	struct image *image = sensor_capture(params, world, 2);
+	struct sphere sphere3 = { .position = { 9.5, 0.5, 1.5 },
+		                  .radius = 0.25 };
+	struct object sphere_obj3 = create_sphere(&sphere3);
+	sphere_obj3.brightness = 0.9;
+	world[2] = sphere_obj3;
+
+	struct image *image = sensor_capture(params, world, 3);
 
 	// todo: get filename from input to main()
 	file_write(image);
