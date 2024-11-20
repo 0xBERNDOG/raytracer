@@ -88,6 +88,13 @@ vector_refract(struct vector v, struct vector _normal, double n1, double n2)
 	optional_vector result = { .present = false };
 
 	struct vector normal = vector_normalise(_normal);
+
+	// need normal vector to be pointing in the opposite direction to v
+	double dot = vector_dot(v, normal);
+	if (dot > 0.0) {
+		normal = vector_multiply(normal, -1.0);
+	}
+
 	double n = n1 / n2;
 
 	double cosI = -vector_dot(normal, v);
