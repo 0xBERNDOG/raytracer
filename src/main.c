@@ -43,7 +43,7 @@ main()
 	sphere_obj2.transmissivity = CREATE_OPTIONAL(double, 0.4);
 	world[1] = sphere_obj2;
 
-	struct sphere sphere3 = { .position = { 9.5, 0.5, 1.5 },
+	struct sphere sphere3 = { .position = { 9.75, 0.5, 1.5 },
 		                  .radius = 0.25 };
 	struct object sphere_obj3 = create_sphere(&sphere3);
 	sphere_obj3.brightness = 0.9;
