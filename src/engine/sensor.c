@@ -33,6 +33,7 @@ shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
 
 	double reflected_brightness = 0.0;
 	if (data.reflectivity.present) {
+		// todo: shoot rays in random directions (smoothness)
 		// update ray position to be reflected by the
 		// hit
 		struct ray reflected_ray = {
@@ -48,6 +49,7 @@ shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
 
 	double transmitted_brightness = 0.0;
 	if (data.transmissivity.present) {
+		// todo: shoot rays in random directions (transparency)
 		bool refraction = true;
 
 		// update ray position to be refracted by the
@@ -182,19 +184,22 @@ sensor_generate_uniformly_for_pixel(struct sensor_params sensor, size_t x,
 
 	// fill up the array with data
 	for (size_t i = 0; i < n; i++) {
-		struct vector offset_x = vector_multiply(
-			x_basis, (i + 1) * (width_per_sample / 2.0));
+		struct vector offset_x =
+			vector_multiply(x_basis, (i + 0.5) * width_per_sample);
 
 		for (size_t j = 0; j < n; j++) {
 			struct vector offset_y = vector_multiply(
-				y_basis, (j + 1) * (width_per_sample / 2.0));
+				y_basis, (j + 0.5) * width_per_sample);
 			struct vector offset = vector_add(offset_x, offset_y);
 
-			ray_array[i * j + j].position =
+			size_t index = (i * n) + j;
+			ray_array[index].position =
 				vector_add(pixel_corner, offset);
-			ray_array[i * j + j].direction = vector_normalise(
-				vector_subtract(ray_array[i * j + j].position,
+			ray_array[index].direction = vector_normalise(
+				vector_subtract(ray_array[index].position,
 			                        starting_position));
+
+			ray_array[index].position = pixel_midpoint;
 		}
 	}
 
@@ -236,6 +241,7 @@ sensor_capture(struct sensor_params params, struct object objects[],
 		}
 	}
 
+	double max_brightness = 1.0;
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
 			// generate rays for the pixel
@@ -246,12 +252,13 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			double brightness = 0.0;
 			for (size_t i = 0; i < n * n; i++) {
 				brightness += shoot_rays(rays[i], objects,
-				                         num_objects, 4, NULL);
+				                         num_objects, 5, NULL);
 			}
-			brightness /= (n * n);
 
-			if (brightness > 1.0) {
-				brightness = 1.0;
+			// simple exposure adjust (prevents max value from
+			// clipping)
+			if (brightness > max_brightness) {
+				max_brightness = brightness;
 			}
 
 			size_t i = x * params.width + y;
@@ -260,6 +267,20 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			image->pixels[i].z = 255.0 * brightness;
 
 			free(rays);
+		}
+	}
+
+	// simple exposure adjust (prevents max value from clipping)
+	for (size_t x = 0; x < params.width; x++) {
+		for (size_t y = 0; y < params.height; y++) {
+			size_t i = x * params.width + y;
+
+			image->pixels[i].x =
+				image->pixels[i].x / max_brightness;
+			image->pixels[i].y =
+				image->pixels[i].y / max_brightness;
+			image->pixels[i].z =
+				image->pixels[i].z / max_brightness;
 		}
 	}
 

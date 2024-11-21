@@ -18,7 +18,7 @@ main()
 	struct object *world = calloc(10, sizeof(struct object));
 	// todo: handle if calloc fails
 
-	double f = 12.5;
+	double f = 24.0;
 	struct sensor_params params = { .plane = { .position = { -f, 0.0, 0.0 },
 		                                   .normal = { 1.0, 0.0,
 		                                               0.0 } },
@@ -52,7 +52,7 @@ main()
 		                  .radius = 10.0 };
 	struct object sphere_obj4 = create_sphere(&sphere4);
 	sphere_obj4.brightness = 0.0;
-	sphere_obj4.refractive_index = CREATE_OPTIONAL(double, 1.2);
+	sphere_obj4.refractive_index = CREATE_OPTIONAL(double, 1.5);
 	sphere_obj4.transmissivity = CREATE_OPTIONAL(double, 0.99);
 	world[3] = sphere_obj4;
 
