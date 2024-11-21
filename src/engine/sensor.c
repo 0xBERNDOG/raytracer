@@ -3,8 +3,14 @@
 #include "engine/image.h"
 #include "engine/ray.h"
 
+#include <assert.h>
+#include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
+
+#ifndef M_PI
+#define M_PI 3.1415926535
+#endif
 
 static double
 shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
@@ -98,6 +104,103 @@ shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
 	return brightness;
 }
 
+static struct ray *
+sensor_generate_uniformly_for_pixel(struct sensor_params sensor, size_t x,
+                                    size_t y, double solid_angle, size_t n)
+{
+	// generate n^2 rays uniformly distributed across pixel (x,y) on the
+	// sensor with a given solid angle (in degrees)
+	struct ray *ray_array = malloc(n * n * sizeof(struct ray));
+	if (!ray_array) {
+		return NULL;
+	}
+
+	assert(n > 0);
+
+	// generate a grid on the pixel's surface (ray positions)
+	double width_per_sample = sensor.pixel_spacing / n;
+
+	struct vector pixel_corner;
+	struct vector pixel_midpoint;
+	struct vector x_basis = { 1.0, 0.0, 0.0 };
+
+	struct vector y_basis = { 0.0, 1.0, 0.0 };
+	{
+		// generate pixel positions in the sensor plane
+		struct vector normal = { 0.0, 0.0, 1.0 };
+		struct vector rotation_axis =
+			vector_cross(normal, sensor.plane.normal);
+
+		if (vector_len(rotation_axis) > 0.0) {
+			struct vector x_basis_rotated =
+				vector_cross(rotation_axis, x_basis);
+			struct vector y_basis_rotated =
+				vector_cross(rotation_axis, y_basis);
+
+			// if rotated vector is zero, then it was
+			// parallel to rotation axis (nothing to be
+			// done)
+			if (vector_len(x_basis_rotated) > 0.0) {
+				x_basis = vector_normalise(x_basis_rotated);
+			}
+
+			if (vector_len(y_basis_rotated) > 0.0) {
+				y_basis = vector_normalise(y_basis_rotated);
+			}
+		}
+
+		struct vector offset_midpoint_x = vector_multiply(
+			x_basis, ((double)x - (sensor.width - 1) / 2.0) *
+					 sensor.pixel_spacing);
+		struct vector offset_midpoint_y = vector_multiply(
+			y_basis, ((double)y - (sensor.height - 1) / 2.0) *
+					 sensor.pixel_spacing);
+		struct vector offset_midpoint =
+			vector_add(offset_midpoint_x, offset_midpoint_y);
+
+		struct vector offset_corner_x = vector_multiply(
+			x_basis, ((double)x - 0.5 - (sensor.width - 1) / 2.0) *
+					 sensor.pixel_spacing);
+		struct vector offset_corner_y = vector_multiply(
+			y_basis, ((double)y - 0.5 - (sensor.height - 1) / 2.0) *
+					 sensor.pixel_spacing);
+		struct vector offset_corner =
+			vector_add(offset_corner_x, offset_corner_y);
+
+		pixel_corner = vector_add(sensor.plane.position, offset_corner);
+		pixel_midpoint =
+			vector_add(sensor.plane.position, offset_midpoint);
+	}
+
+	// solid angle determines how far back to put the direction vector's
+	// starting point
+	double dist =
+		sensor.pixel_spacing / (2 * tan(M_PI * solid_angle / 180.0));
+	struct vector starting_position =
+		vector_add(pixel_midpoint,
+	                   vector_multiply(sensor.plane.normal, -1.0 * dist));
+
+	// fill up the array with data
+	for (size_t i = 0; i < n; i++) {
+		struct vector offset_x = vector_multiply(
+			x_basis, (i + 1) * (width_per_sample / 2.0));
+
+		for (size_t j = 0; j < n; j++) {
+			struct vector offset_y = vector_multiply(
+				y_basis, (j + 1) * (width_per_sample / 2.0));
+			struct vector offset = vector_add(offset_x, offset_y);
+
+			ray_array[i * j + j].position =
+				vector_add(pixel_corner, offset);
+			ray_array[i * j + j].direction = vector_normalise(
+				vector_subtract(ray_array[i * j + j].position,
+			                        starting_position));
+		}
+	}
+
+	return ray_array;
+}
+
 struct image *
 sensor_capture(struct sensor_params params, struct object objects[],
                size_t num_objects)
@@ -105,9 +208,6 @@ sensor_capture(struct sensor_params params, struct object objects[],
 	if (objects == NULL) {
 		return NULL;
 	}
-
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = params.plane.normal };
 
 	struct image *image = image_allocate(params.width, params.height);
 
@@ -136,24 +236,19 @@ sensor_capture(struct sensor_params params, struct object objects[],
 		}
 	}
 
-	// todo: replace this with proper hit data
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
-			struct vector offset_x = vector_multiply(
-				x_basis,
-				((double)x - (params.width - 1) / 2.0) *
-					params.pixel_spacing);
-			struct vector offset_y = vector_multiply(
-				y_basis,
-				((double)y - (params.height - 1) / 2.0) *
-					params.pixel_spacing);
-			struct vector offset = vector_add(offset_x, offset_y);
-			ray.position =
-				vector_add(params.plane.position, offset);
-			ray.direction = params.plane.normal;
+			// generate rays for the pixel
+			size_t n = 1;    // num_rays_per_pixel = n^2
+			struct ray *rays = sensor_generate_uniformly_for_pixel(
+				params, x, y, 25, n);
 
-			double brightness =
-				shoot_rays(ray, objects, num_objects, 3, NULL);
+			double brightness = 0.0;
+			for (size_t i = 0; i < n * n; i++) {
+				brightness += shoot_rays(rays[i], objects,
+				                         num_objects, 4, NULL);
+			}
+			brightness /= (n * n);
 
 			if (brightness > 1.0) {
 				brightness = 1.0;
@@ -163,6 +258,8 @@ sensor_capture(struct sensor_params params, struct object objects[],
 			image->pixels[i].x = 255.0 * brightness;
 			image->pixels[i].y = 255.0 * brightness;
 			image->pixels[i].z = 255.0 * brightness;
+
+			free(rays);
 		}
 	}
 

@@ -8,6 +8,7 @@
 #include "engine/vector.h"
 
 struct object;
+struct sensor_params;
 
 struct ray {
 	struct vector position;

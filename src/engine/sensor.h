@@ -21,4 +21,6 @@ struct sensor_params {
 struct image *sensor_capture(struct sensor_params, struct object objects[],
                              size_t num_objects);
 
+// todo: functions to get position of pixels within sensor plane?
+
 #endif
