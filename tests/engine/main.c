@@ -1,6 +1,7 @@
 #include "tests/engine/main.h"
 
 #include "minunit.h"
+#include "tests/engine/lens.h"
 #include "tests/engine/plane.h"
 #include "tests/engine/ray.h"
 #include "tests/engine/sensor.h"
@@ -11,6 +12,7 @@ char *
 test_engine_all()
 {
 	// run all engine tests
+	mu_run_test_group(test_lens_all);
 	mu_run_test_group(test_plane_all);
 	mu_run_test_group(test_ray_all);
 	mu_run_test_group(test_sensor_all);

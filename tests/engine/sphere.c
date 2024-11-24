@@ -29,7 +29,7 @@ test_intersection()
 }
 
 static char *
-test_offset()
+test_intersection_offset()
 {
 	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.5 },
 		           .direction = { .x = 1.0, .y = 0.0, .z = 0.0 } };
@@ -179,7 +179,7 @@ test_sphere_all()
 {
 	// run all sphere tests
 	mu_run_test(test_intersection);
-	mu_run_test(test_offset);
+	mu_run_test(test_intersection_offset);
 	mu_run_test(test_intersection_glancing);
 	mu_run_test(test_intersection_from_inside);
 	mu_run_test(test_no_intersection);

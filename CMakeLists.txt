@@ -14,6 +14,7 @@ configure_file("${CMAKE_SOURCE_DIR}/src/version.h" "${CMAKE_SOURCE_DIR}/src/vers
 # common
 set(SRC_FILES
     "${CMAKE_SOURCE_DIR}/src/engine/image.c"
+    "${CMAKE_SOURCE_DIR}/src/engine/lens.c"
     "${CMAKE_SOURCE_DIR}/src/engine/plane.c"
     "${CMAKE_SOURCE_DIR}/src/engine/ray.c"
     "${CMAKE_SOURCE_DIR}/src/engine/sensor.c"
@@ -52,6 +53,7 @@ target_link_libraries(${TARGET_RELEASE} ${LINK_LIBRARIES})
 # unit tests
 set(SRC_FILES_TESTS
     "${CMAKE_SOURCE_DIR}/tests/engine/main.c"
+    "${CMAKE_SOURCE_DIR}/tests/engine/lens.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/plane.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/ray.c"
     "${CMAKE_SOURCE_DIR}/tests/engine/sensor.c"
