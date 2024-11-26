@@ -71,7 +71,8 @@ sphere_ray_intersection(void *_sphere, struct ray ray)
 	return result;
 }
 
-static size_t
+// todo: test
+size_t
 sphere_ray_intersection_count(struct sphere *sphere, struct ray ray)
 {
 	// return the number of intersections in front of the ray
