@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "engine/image.h"
-#include "engine/lens_spherical.h"
+#include "engine/lens_ideal.h"
 #include "engine/object.h"
 #include "engine/ray.h"
 #include "engine/sensor.h"
@@ -19,13 +19,14 @@ main()
 	struct object *world = calloc(10, sizeof(struct object));
 	// todo: handle if calloc fails
 
-	double f = 150;
-	struct sensor_params params = { .plane = { .position = { -f, 0.0, 0.0 },
-		                                   .normal = { 1.0, 0.0,
-		                                               0.0 } },
-		                        .width = 1000,
-		                        .height = 1000,
-		                        .pixel_spacing = 0.05 };
+	double f = 30.0;
+	struct sensor_params params = {
+		.plane = { .position = { -100.0, 0.0, 0.0 },
+		           .normal = { 1.0, 0.0, 0.0 } },
+		.width = 1000,
+		.height = 1000,
+		.pixel_spacing = 0.05
+	};
 
 	struct sphere sphere = { .position = { f, 0.0, 0.0 }, .radius = 1.25 };
 	struct object sphere_obj = create_sphere(&sphere);
@@ -49,13 +50,11 @@ main()
 	sphere_obj3.brightness = 0.9;
 	world[2] = sphere_obj3;
 
-	double radius = 50;
-	struct lens_spherical lens = { .position = { 0.0, 0.0, 0.0 },
-		                       .normal = { 1.0, 0.0, 0.0 },
-		                       .r1 = radius,
-		                       .r2 = radius,
-		                       .separation = radius - 0.5 };
-	struct object lens_obj = create_lens_spherical(&lens);
+	struct lens_ideal lens = { .position = { 0.0, 0.0, 0.0 },
+		                   .normal = { 1.0, 0.0, 0.0 },
+		                   .r = 25.0,
+		                   .f = 100.0 };
+	struct object lens_obj = create_lens_ideal(&lens);
 	lens_obj.brightness = 0.0;
 	lens_obj.refractive_index = CREATE_OPTIONAL(double, 1.2);
 	lens_obj.transmissivity = CREATE_OPTIONAL(double, 0.99);
