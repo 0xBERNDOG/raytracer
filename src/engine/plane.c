@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <math.h>
 
+#include "engine/object.h"
 #include "engine/ray.h"
 #include "utils/compare.h"
 
@@ -108,6 +109,8 @@ create_plane(struct plane *plane)
 	struct object object = { .object = (void *)plane,
 		                 .func_ray_intersection =
 		                         &plane_ray_intersection,
+		                 .func_ray_refraction =
+		                         &object_default_refraction,
 		                 .func_hit_normal = &plane_hit_normal,
 		                 .func_ray_entering = &plane_ray_entering,
 		                 .func_ray_leaving = &plane_ray_leaving };

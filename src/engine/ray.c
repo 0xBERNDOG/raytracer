@@ -7,7 +7,7 @@
 #include "utils/compare.h"
 
 optional_hit_data
-ray_get_hit_data(struct ray ray, struct object objects[], size_t num_objects,
+ray_get_hit_data(struct ray ray, struct object *objects, size_t num_objects,
                  struct object *last_hit)
 {
 	optional_hit_data result = { .present = false };

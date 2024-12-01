@@ -3,6 +3,8 @@
 
 #include "engine/vector.h"
 
+// todo: replace with ideal lens with a custom func_ray_refraction
+
 struct ray;
 
 struct lens {
@@ -11,7 +13,7 @@ struct lens {
 
 	double r1;
 	double r2;
-	double separation;
+	double separation;    // todo: replace with lens radius?
 };
 
 struct object create_lens(struct lens *lens);

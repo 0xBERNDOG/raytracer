@@ -1,4 +1,5 @@
 #include "engine/lens.h"
+#include "engine/object.h"
 #include "engine/ray.h"
 #include "engine/sphere.h"
 #include "utils/compare.h"
@@ -39,6 +40,8 @@ create_lens(struct lens *lens)
 	struct object object = { .object = (void *)lens,
 		                 .func_ray_intersection =
 		                         &lens_ray_intersection,
+		                 .func_ray_refraction =
+		                         &object_default_refraction,
 		                 .func_hit_normal = &lens_hit_normal,
 		                 .func_ray_entering = &lens_ray_entering,
 		                 .func_ray_leaving = &lens_ray_leaving };

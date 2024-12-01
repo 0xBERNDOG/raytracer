@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <math.h>
 
+#include "engine/object.h"
 #include "engine/ray.h"
 #include "utils/compare.h"
 
@@ -161,6 +162,8 @@ create_sphere(struct sphere *sphere)
 	struct object object = { .object = (void *)sphere,
 		                 .func_ray_intersection =
 		                         &sphere_ray_intersection,
+		                 .func_ray_refraction =
+		                         &object_default_refraction,
 		                 .func_hit_normal = &sphere_hit_normal,
 		                 .func_ray_entering = &sphere_ray_entering,
 		                 .func_ray_leaving = &sphere_ray_leaving };

@@ -49,53 +49,13 @@ shoot_rays(struct ray ray, struct object objects[], size_t num_objects,
 
 	double transmitted_brightness = 0.0;
 	if (data.transmissivity.present) {
-		// todo: shoot rays in random directions (transparency)
-		bool refraction = true;
-
-		// update ray position to be refracted by the
-		// hit
-		double n1 = 1.0;
-		double n2 = 1.0;
-
-		// todo: this doesnt work for objects that are touching, assumes
-		// we go in/out of air all the time
-
-		// check for entering/leaving from the midpoint between the shot
-		// ray and the hit position to prevent spurious detections
-		struct ray advanced_ray = ray;
-		advanced_ray.position = vector_multiply(
-			vector_add(data.position, ray.position), 0.5);
-
-		if (data.object->func_ray_entering(data.object->object,
-		                                   advanced_ray)) {
-			n1 = 1.0;
-			n2 = data.refractive_index.value;
-		} else if (data.object->func_ray_leaving(data.object->object,
-		                                         advanced_ray)) {
-			n1 = data.refractive_index.value;
-			n2 = 1.0;
-		} else {
-			// neither entering nor leaving the object, so no
-			// optical boundary
-			refraction = false;
-		}
-
-		optional_vector refracted_direction =
-			vector_refract(ray.direction, data.normal, n1, n2);
-
-		if (!refracted_direction.present) {
-			refraction = false;
-		}
-
-		if (refraction) {
-			struct ray refracted_ray = {
-				.direction = refracted_direction.value,
-				.position = data.position
-			};
-
+		optional_ray refracted_ray =
+			data.object->func_ray_refraction(ray, data);
+		if (refracted_ray.present) {
 			transmitted_brightness =
-				shoot_rays(refracted_ray, objects, num_objects,
-			                   depth - 1, data.object) *
+				shoot_rays(refracted_ray.value, objects,
+			                   num_objects, depth - 1,
+			                   data.object) *
 				data.transmissivity.value;
 		}
 	}
@@ -245,13 +205,14 @@ sensor_capture(struct sensor_params params, struct object objects[],
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
 			// generate rays for the pixel
-			size_t n = 1;    // num_rays_per_pixel = n^2
+			size_t n = 3;    // num_rays_per_pixel = n^2
 			struct ray *rays = sensor_generate_uniformly_for_pixel(
-				params, x, y, 25, n);
+				params, x, y, 10, n);
 
 			double brightness = 0.0;
 			for (size_t i = 0; i < n * n; i++) {
-				brightness += shoot_rays(rays[i], objects,
+				brightness += (1.0 / (n * n)) *
+				              shoot_rays(rays[i], objects,
 				                         num_objects, 5, NULL);
 			}
 
