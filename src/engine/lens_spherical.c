@@ -1,4 +1,4 @@
-#include "engine/lens.h"
+#include "engine/lens_spherical.h"
 #include "engine/object.h"
 #include "engine/ray.h"
 #include "engine/sphere.h"
@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
 static struct sphere *
-lens_to_spheres(struct lens lens)
+lens_to_spheres(struct lens_spherical lens)
 {
 	struct sphere *spheres = malloc(2 * sizeof(struct sphere));
 	assert(spheres);
@@ -34,17 +34,17 @@ lens_to_spheres(struct lens lens)
 }
 
 struct object
-create_lens(struct lens *lens)
+create_lens_spherical(struct lens_spherical *lens)
 {
 	assert(lens != NULL);
-	struct object object = { .object = (void *)lens,
-		                 .func_ray_intersection =
-		                         &lens_ray_intersection,
-		                 .func_ray_refraction =
-		                         &object_default_refraction,
-		                 .func_hit_normal = &lens_hit_normal,
-		                 .func_ray_entering = &lens_ray_entering,
-		                 .func_ray_leaving = &lens_ray_leaving };
+	struct object object = {
+		.object = (void *)lens,
+		.func_ray_intersection = &lens_spherical_ray_intersection,
+		.func_ray_refraction = &object_default_refraction,
+		.func_hit_normal = &lens_spherical_hit_normal,
+		.func_ray_entering = &lens_spherical_ray_entering,
+		.func_ray_leaving = &lens_spherical_ray_leaving
+	};
 
 	// make sure lens' normal is normalised
 	lens->normal = vector_normalise(lens->normal);
@@ -53,13 +53,13 @@ create_lens(struct lens *lens)
 }
 
 optional_vector
-lens_ray_intersection(void *_lens, struct ray ray)
+lens_spherical_ray_intersection(void *_lens, struct ray ray)
 {
 	// lens intersection is just two spheres
 	// https://mathworld.wolfram.com/Sphere-SphereIntersection.html
 
 	optional_vector result = { .present = false };
-	struct lens *lens = (struct lens *)_lens;
+	struct lens_spherical *lens = (struct lens_spherical *)_lens;
 
 	// todo: support for more complex lenses with negative radius
 	assert(lens->r1 > 0.0);
@@ -115,10 +115,10 @@ lens_ray_intersection(void *_lens, struct ray ray)
 }
 
 optional_vector
-lens_hit_normal(void *_lens, struct vector hit_position)
+lens_spherical_hit_normal(void *_lens, struct vector hit_position)
 {
 	optional_vector result = { .present = false };
-	struct lens *lens = (struct lens *)_lens;
+	struct lens_spherical *lens = (struct lens_spherical *)_lens;
 
 	// need to be on the surface of sphere1 && inside sphere2 (or vice
 	// versa)
@@ -148,14 +148,14 @@ lens_hit_normal(void *_lens, struct vector hit_position)
 }
 
 bool
-lens_ray_entering(void *_lens, struct ray ray)
+lens_spherical_ray_entering(void *_lens, struct ray ray)
 {
 	// if total sphere_ray intersections = 4, we are always entering;
 	// if total sphere_ray intersections = 3, and we are inside the sphere
 	// with 1, then we are entering;
 	// else we aren't entering
 	bool result = false;
-	struct lens *lens = (struct lens *)_lens;
+	struct lens_spherical *lens = (struct lens_spherical *)_lens;
 	struct sphere *spheres = lens_to_spheres(*lens);
 
 	struct sphere sphere1 = spheres[0];
@@ -187,11 +187,11 @@ lens_ray_entering(void *_lens, struct ray ray)
 }
 
 bool
-lens_ray_leaving(void *_lens, struct ray ray)
+lens_spherical_ray_leaving(void *_lens, struct ray ray)
 {
 	// simply requires one sphere_ray intersection each
 	bool result = false;
-	struct lens *lens = (struct lens *)_lens;
+	struct lens_spherical *lens = (struct lens_spherical *)_lens;
 	struct sphere *spheres = lens_to_spheres(*lens);
 
 	struct sphere sphere1 = spheres[0];

@@ -1,5 +1,6 @@
 #include "engine/object.h"
 
+// todo: probably needs tests?
 optional_ray
 object_default_refraction(struct ray ray, struct hit_data data)
 {
