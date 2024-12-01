@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,25 +18,26 @@ main()
 {
 	// todo: populate the world
 	struct object *world = calloc(10, sizeof(struct object));
-	// todo: handle if calloc fails
+	assert(world);
 
-	double f = 30.0;
-	struct sensor_params params = {
-		.plane = { .position = { -100.0, 0.0, 0.0 },
-		           .normal = { 1.0, 0.0, 0.0 } },
-		.width = 1000,
-		.height = 1000,
-		.pixel_spacing = 0.05
-	};
+	double f = 35.0;
+	double q = 50.0;
+	double p = 1.0 / ((1.0 / f) - (1.0 / q));
+	struct sensor_params params = { .plane = { .position = { -p, 0.0, 0.0 },
+		                                   .normal = { 1.0, 0.0,
+		                                               0.0 } },
+		                        .width = 1000,
+		                        .height = 1000,
+		                        .pixel_spacing = 0.01 };
 
-	struct sphere sphere = { .position = { f, 0.0, 0.0 }, .radius = 1.25 };
+	struct sphere sphere = { .position = { q, 0.0, 0.0 }, .radius = 1.25 };
 	struct object sphere_obj = create_sphere(&sphere);
 	// todo: improve how lighting data is passed to object?
 	sphere_obj.brightness = 0.7;
 	sphere_obj.reflectivity = CREATE_OPTIONAL(double, 0.25);
 	world[0] = sphere_obj;
 
-	struct sphere sphere2 = { .position = { f - 0.5, 0.5, 0.9 },
+	struct sphere sphere2 = { .position = { q - 0.5, 0.5, 0.9 },
 		                  .radius = 0.75 };
 	struct object sphere_obj2 = create_sphere(&sphere2);
 	sphere_obj2.brightness = 0.0;
@@ -44,7 +46,7 @@ main()
 	sphere_obj2.transmissivity = CREATE_OPTIONAL(double, 0.4);
 	world[1] = sphere_obj2;
 
-	struct sphere sphere3 = { .position = { f - 0.25, 0.5, 1.5 },
+	struct sphere sphere3 = { .position = { q - 0.25, 0.5, 1.5 },
 		                  .radius = 0.25 };
 	struct object sphere_obj3 = create_sphere(&sphere3);
 	sphere_obj3.brightness = 0.9;
@@ -53,7 +55,7 @@ main()
 	struct lens_ideal lens = { .position = { 0.0, 0.0, 0.0 },
 		                   .normal = { 1.0, 0.0, 0.0 },
 		                   .r = 25.0,
-		                   .f = 100.0 };
+		                   .f = f };
 	struct object lens_obj = create_lens_ideal(&lens);
 	lens_obj.brightness = 0.0;
 	lens_obj.refractive_index = CREATE_OPTIONAL(double, 1.2);
