@@ -205,7 +205,7 @@ sensor_capture(struct sensor_params params, struct object objects[],
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
 			// generate rays for the pixel
-			size_t n = 20;    // num_rays_per_pixel = n^2
+			size_t n = 5;    // num_rays_per_pixel = n^2
 			struct ray *rays = sensor_generate_uniformly_for_pixel(
 				params, x, y, 15,
 				n);    // todo: figure out what value angle to

@@ -7,18 +7,18 @@
 static char *
 test_intersection()
 {
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = { .x = 0.0, .y = 0.0, .z = 1.0 } };
+	struct ray ray = { .position = { 0.0, 0.0, 0.0 },
+		           .direction = { 0.0, 0.0, 1.0 } };
 
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 1.0 },
-		               .normal = { .x = 0.0, .y = 0.0, .z = 1.0 } };
+	struct plane plane = { .position = { 0.0, 0.0, 1.0 },
+		               .normal = { 0.0, 0.0, 1.0 } };
 
 	optional_vector result = plane_ray_intersection(&plane, ray);
 	mu_assert("no plane-ray intersection", result.present == true);
 
 	struct vector intersection = result.value;
 
-	struct vector expected = { .x = 0.0, .y = 0.0, .z = 1.0 };
+	struct vector expected = { 0.0, 0.0, 1.0 };
 	mu_assert("plane-ray intersection not equal to expected",
 	          vector_equals(intersection, expected));
 
@@ -28,11 +28,11 @@ test_intersection()
 static char *
 test_intersection_angled()
 {
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = { .x = 0.0, .y = 1.0, .z = 1.0 } };
+	struct ray ray = { .position = { 0.0, 0.0, 0.0 },
+		           .direction = { 0.0, 1.0, 1.0 } };
 
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 1.0 },
-		               .normal = { .x = 1.0, .y = 1.0, .z = 1.0 } };
+	struct plane plane = { .position = { 0.0, 0.0, 1.0 },
+		               .normal = { 1.0, 1.0, 1.0 } };
 
 	optional_vector result = plane_ray_intersection(&plane, ray);
 	mu_assert("no plane-ray intersection", result.present == true);
@@ -43,11 +43,11 @@ test_intersection_angled()
 static char *
 test_coincident()
 {
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 1.0 },
-		           .direction = { .x = 0.0, .y = 0.0, .z = 1.0 } };
+	struct ray ray = { .position = { 0.0, 0.0, 1.0 },
+		           .direction = { 0.0, 0.0, 1.0 } };
 
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		               .normal = { .x = 1.0, .y = 0.0, .z = 0.0 } };
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
+		               .normal = { 1.0, 0.0, 0.0 } };
 
 	optional_vector result = plane_ray_intersection(&plane, ray);
 	mu_assert("no plane-ray intersection", result.present == true);
@@ -64,11 +64,11 @@ test_coincident()
 static char *
 test_coincident_same_position()
 {
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = { .x = 0.0, .y = 0.0, .z = 1.0 } };
+	struct ray ray = { .position = { 0.0, 0.0, 0.0 },
+		           .direction = { 0.0, 0.0, 1.0 } };
 
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		               .normal = { .x = 1.0, .y = 0.0, .z = 0.0 } };
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
+		               .normal = { 1.0, 0.0, 0.0 } };
 
 	optional_vector result = plane_ray_intersection(&plane, ray);
 	mu_assert("no plane-ray intersection", result.present == true);
@@ -85,11 +85,11 @@ test_coincident_same_position()
 static char *
 test_no_intersection()
 {
-	struct ray ray = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
-		           .direction = { .x = 0.0, .y = 0.0, .z = 1.0 } };
+	struct ray ray = { .position = { 0.0, 0.0, 0.0 },
+		           .direction = { 0.0, 0.0, 1.0 } };
 
-	struct plane plane = { .position = { .x = 1.0, .y = 0.0, .z = 0.0 },
-		               .normal = { .x = 1.0, .y = 0.0, .z = 0.0 } };
+	struct plane plane = { .position = { 1.0, 0.0, 0.0 },
+		               .normal = { 1.0, 0.0, 0.0 } };
 
 	optional_vector result = plane_ray_intersection(&plane, ray);
 	mu_assert("plane-ray intersection", result.present == false);
@@ -100,7 +100,7 @@ test_no_intersection()
 static char *
 test_hit_normal()
 {
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
 		               .normal = { 0.0, 0.0, 1.0 } };
 	struct vector hit_position = { 1.0, 0.0, 0.0 };
 	struct vector expected = { 0.0, 0.0, 1.0 };
@@ -116,7 +116,7 @@ test_hit_normal()
 static char *
 test_hit_normal_no_hit()
 {
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
 		               .normal = { 0.0, 0.0, 1.0 } };
 	struct vector hit_position = { 1.0, 0.0, 1.0 };
 
@@ -129,7 +129,7 @@ test_hit_normal_no_hit()
 static char *
 test_ray_entering()
 {
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
 		               .normal = { 1.0, 0.0, 0.0 } };
 	struct ray ray = { .position = { 1.0, 0.0, 0.0 },
 		           .direction = { 1.0, 0.0, 0.0 } };
@@ -143,7 +143,7 @@ test_ray_entering()
 static char *
 test_ray_leaving()
 {
-	struct plane plane = { .position = { .x = 0.0, .y = 0.0, .z = 0.0 },
+	struct plane plane = { .position = { 0.0, 0.0, 0.0 },
 		               .normal = { 1.0, 0.0, 0.0 } };
 	struct ray ray = { .position = { 1.0, 0.0, 0.0 },
 		           .direction = { 1.0, 0.0, 0.0 } };

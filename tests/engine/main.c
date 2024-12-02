@@ -1,6 +1,7 @@
 #include "tests/engine/main.h"
 
 #include "minunit.h"
+#include "tests/engine/aperture.h"
 #include "tests/engine/lens_ideal.h"
 #include "tests/engine/lens_spherical.h"
 #include "tests/engine/plane.h"
@@ -13,6 +14,7 @@ char *
 test_engine_all()
 {
 	// run all engine tests
+	mu_run_test_group(test_aperture_all);
 	mu_run_test_group(test_lens_ideal_all);
 	mu_run_test_group(test_lens_spherical_all);
 	mu_run_test_group(test_plane_all);

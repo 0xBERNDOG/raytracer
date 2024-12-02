@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "engine/aperture.h"
 #include "engine/image.h"
 #include "engine/lens_ideal.h"
 #include "engine/object.h"
@@ -62,7 +63,15 @@ main()
 	lens_obj.transmissivity = CREATE_OPTIONAL(double, 0.99);
 	world[3] = lens_obj;
 
-	struct image *image = sensor_capture(params, world, 4);
+	struct aperture aperture = { .position = { -1.0, 0.0, 0.0 },
+		                     .normal = { 1.0, 0.0, 0.0 },
+		                     .r_opening = 5.0,
+		                     .r_size = 0.0 };
+	struct object aperture_obj = create_aperture(&aperture);
+	lens_obj.brightness = 0.0;
+	world[4] = aperture_obj;
+
+	struct image *image = sensor_capture(params, world, 5);
 
 	// todo: get filename from input to main()
 	file_write(image);
