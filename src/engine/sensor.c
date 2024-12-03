@@ -2,6 +2,7 @@
 #include "engine/hit_data.h"
 #include "engine/image.h"
 #include "engine/ray.h"
+#include "utils/compare.h"
 
 #include <assert.h>
 #include <math.h>
@@ -202,10 +203,11 @@ sensor_capture(struct sensor_params params, struct object objects[],
 	}
 
 	double max_brightness = 1.0;
+	double avg_brightness = 0.0;
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
 			// generate rays for the pixel
-			size_t n = 5;    // num_rays_per_pixel = n^2
+			size_t n = 100;    // num_rays_per_pixel = n^2
 			struct ray *rays = sensor_generate_uniformly_for_pixel(
 				params, x, y, 15,
 				n);    // todo: figure out what value angle to
@@ -213,16 +215,14 @@ sensor_capture(struct sensor_params params, struct object objects[],
 
 			double brightness = 0.0;
 			for (size_t i = 0; i < n * n; i++) {
-				brightness += (1.0 / (n * n)) *
-				              shoot_rays(rays[i], objects,
+				brightness += shoot_rays(rays[i], objects,
 				                         num_objects, 5, NULL);
 			}
 
-			// simple exposure adjust (prevents max value from
-			// clipping)
 			if (brightness > max_brightness) {
 				max_brightness = brightness;
 			}
+			avg_brightness += brightness;
 
 			size_t i = x * params.width + y;
 			image->pixels[i].x = 255.0 * brightness;
@@ -233,17 +233,31 @@ sensor_capture(struct sensor_params params, struct object objects[],
 		}
 	}
 
-	// simple exposure adjust (prevents max value from clipping)
+	avg_brightness /= (params.width * params.height);
+
+	// simple exposure adjust:
+	// rescale brightness so that avg is 0.5, min is 0.0, max
+	// is 1.0
 	for (size_t x = 0; x < params.width; x++) {
 		for (size_t y = 0; y < params.height; y++) {
 			size_t i = x * params.width + y;
 
-			image->pixels[i].x =
-				image->pixels[i].x / max_brightness;
-			image->pixels[i].y =
-				image->pixels[i].y / max_brightness;
-			image->pixels[i].z =
-				image->pixels[i].z / max_brightness;
+			double pixel_x = MAX(
+				(image->pixels[i].x + (0.5 - avg_brightness)) /
+					max_brightness,
+				0.0);
+			double pixel_y = MAX(
+				(image->pixels[i].y + (0.5 - avg_brightness)) /
+					max_brightness,
+				0.0);
+			double pixel_z = MAX(
+				(image->pixels[i].z + (0.5 - avg_brightness)) /
+					max_brightness,
+				0.0);
+
+			image->pixels[i].x = pixel_x;
+			image->pixels[i].y = pixel_y;
+			image->pixels[i].z = pixel_z;
 		}
 	}
 
